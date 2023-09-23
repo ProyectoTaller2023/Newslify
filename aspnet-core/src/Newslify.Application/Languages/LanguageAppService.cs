@@ -9,14 +9,28 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Newslify.Languages
 {
-    public class LanguageAppService :
-    CrudAppService<Language, LanguageDto, int>, ILanguageAppService
+    public class LanguageAppService : NewslifyAppService, ILanguageAppService
     {
-        public LanguageAppService(IRepository<Language, int> repository)
-            : base(repository)
-        {
+        private readonly IRepository<Language, int> _repository;
 
+        public LanguageAppService(IRepository<Language, int> repository)
+        {
+            _repository = repository;
         }
+
+        public async Task<ICollection<LanguageDto>> GetLanguagesAsync()
+        {
+            var languages = await _repository.GetListAsync();
+
+            return ObjectMapper.Map<ICollection<Language>, ICollection<LanguageDto>>(languages);
+        }
+
+       /* public async Task<ThemeDto> GetThemesAsync(int id)
+        {
+            var theme = await _repository.GetAsync(id);
+
+            return ObjectMapper.Map<Theme, ThemeDto>(theme);
+        }*/
     }
 }
 

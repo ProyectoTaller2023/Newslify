@@ -12,6 +12,8 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Newslify.Languages;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Newslify.EntityFrameworkCore;
 
@@ -53,6 +55,12 @@ public class NewslifyDbContext :
 
     #endregion
 
+    #region Entidades de dominio  
+    /* Domain Entities */
+    public DbSet<Language> Languages { get; set; }
+
+    #endregion
+
     public NewslifyDbContext(DbContextOptions<NewslifyDbContext> options)
         : base(options)
     {
@@ -75,12 +83,20 @@ public class NewslifyDbContext :
         builder.ConfigureTenantManagement();
 
         /* Configure your own tables/entities inside here */
-
-        //builder.Entity<YourEntity>(b =>
+            //builder.Entity<YourEntity>(b =>
         //{
         //    b.ToTable(NewslifyConsts.DbTablePrefix + "YourEntities", NewslifyConsts.DbSchema);
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        /* Language Entity*/ 
+        builder.Entity<Language>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "Languages", NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.Property(x => x.InternationalCode).HasConversion<string>().HasMaxLength(2).IsRequired();
+        });
     }
 }

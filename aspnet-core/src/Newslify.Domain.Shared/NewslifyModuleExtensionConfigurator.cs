@@ -35,8 +35,19 @@ public static class NewslifyModuleExtensionConfigurator
          */
     }
 
-    private static void ConfigureExtraProperties()
-    {
+
+        private static void ConfigureExtraProperties()
+        {
+            ObjectExtensionManager.Instance.Modules().ConfigureIdentity(identity =>
+            {
+                identity.ConfigureUser(user =>
+                {
+                    user.AddOrUpdateProperty<int>(
+                        UserConsts.LanguagePropertyName
+                    );
+                });
+            });
+
         /* You can configure extra properties for the
          * entities defined in the modules used by your application.
          *

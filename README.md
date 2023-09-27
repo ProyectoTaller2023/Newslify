@@ -27,5 +27,3 @@ Se deberá enviar un mail al usuario manifestando la situación.
 ### Monitoreo
 El usuario podrá acceder al panel de monitoreo de la API en donde se visualizarán datos de accesos realizados a la API como ser cantidad de accesos, tiempos promedio de acceso, cantidad de errores, etc.   
 La aplicación deberá contener una bitácora de monitoreo (archivo de log), que permita hacer diagnósticos ante la ocurrencia de errores.
-
-TEST PROTECTED BRANCH

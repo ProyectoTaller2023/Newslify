@@ -82,16 +82,16 @@ public class NewslifyDbContext :
         builder.ConfigureFeatureManagement();
         builder.ConfigureTenantManagement();
 
-        /* Configure your own tables/entities inside here */
-            //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(NewslifyConsts.DbTablePrefix + "YourEntities", NewslifyConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+    /* Configure your own tables/entities inside here */
+    //builder.Entity<YourEntity>(b =>
+    //{
+    //    b.ToTable(NewslifyConsts.DbTablePrefix + "YourEntities", NewslifyConsts.DbSchema);
+    //    b.ConfigureByConvention(); //auto configure for the base class props
+    //    //...
+    //});
 
-        /* Language Entity*/ 
-        builder.Entity<Language>(b =>
+    /* Language Entity*/
+    builder.Entity<Language>(b =>
         {
             b.ToTable(NewslifyConsts.DbTablePrefix + "Languages", NewslifyConsts.DbSchema);
             b.ConfigureByConvention();

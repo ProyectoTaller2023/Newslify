@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities;
-
+using Volo.Abp.Identity;
 
 namespace Newslify.Languages
 {
@@ -14,5 +14,6 @@ namespace Newslify.Languages
 
         public string Name { get; set; }
         public LanguageIntCodeType InternationalCode { get => internationalCode; set => internationalCode = value; }
+        public ICollection<IdentityUser> Users { get; set; }
     }
 }

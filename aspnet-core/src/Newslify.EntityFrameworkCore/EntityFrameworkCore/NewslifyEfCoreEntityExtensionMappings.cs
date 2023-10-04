@@ -16,14 +16,14 @@ public static class NewslifyEfCoreEntityExtensionMappings
 
         OneTimeRunner.Run(() =>
         {
-            ObjectExtensionManager.Instance
+           /* ObjectExtensionManager.Instance
                 .MapEfCoreProperty<IdentityUser, int>(
-                    nameof(User.LanguageID),
+                    nameof(User.LanguageId),
                     (entityBuilder, propertyBuilder) =>
                     {
-                        propertyBuilder.HasDefaultValue(1);
+                        propertyBuilder.HasDefaultValue(UserConsts.LanguagePropertyDefaultValue);
                     }
-                );
+                );*/
 
             /* You can configure extra properties for the
             * entities defined in the modules used by your application.

@@ -2,5 +2,5 @@
 
 public class User
 {
-     public int LanguageID { get; set; }
+     public int LanguageId { get; set; }
 }

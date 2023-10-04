@@ -112,7 +112,7 @@ public class NewslifyDbContext :
         {
             b.ToTable(NewslifyConsts.DbTablePrefix + "Keywords", NewslifyConsts.DbSchema);
             b.ConfigureByConvention();
-            b.Property(x => x.Keyword).IsRequired().HasMaxLength(128);
+            b.Property(x => x.KeyWord).IsRequired().HasMaxLength(128);
         });
 
         /* New Entity*/

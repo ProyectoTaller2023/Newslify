@@ -9,6 +9,6 @@ namespace Newslify.Keywords
 {
     public class Keyword : Entity<int>
     {
-        public string Keyword { get; set; }
+        public string KeyWord { get; set; }
     }
 }

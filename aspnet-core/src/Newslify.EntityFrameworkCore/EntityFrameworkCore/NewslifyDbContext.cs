@@ -13,6 +13,10 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Newslify.Languages;
+using Newslify.ReadingLists;
+using Newslify.Keywords;
+using Newslify.News;
+using Newslify.LogReadNews;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Newslify.EntityFrameworkCore;
@@ -58,6 +62,10 @@ public class NewslifyDbContext :
     #region Entidades de dominio  
     /* Domain Entities */
     public DbSet<Language> Languages { get; set; }
+    public DbSet<ReadingList> ReadingLists { get; set; }
+    public DbSet<Keyword> Keywords { get; set; }
+    public DbSet<New> News { get; set; }
+    public DbSet<LogReadNew> LogReadNews { get; set; }
 
     #endregion
 
@@ -97,6 +105,43 @@ public class NewslifyDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.Property(x => x.InternationalCode).HasConversion<string>().HasMaxLength(2).IsRequired();
+        });
+
+        /* Keyword Entity*/
+        builder.Entity<Keyword>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "Keywords", NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.KeyWord).IsRequired().HasMaxLength(128);
+        });
+
+        /* New Entity*/
+        builder.Entity<New>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "News", NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Description).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Author).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Title).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Url).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Source).IsRequired().HasMaxLength(128);
+        });
+
+        /* ReadingList Entity*/
+        builder.Entity<ReadingList>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "ReadingLists", NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+        });
+
+        /* LogReadNew Entity*/
+        builder.Entity<LogReadNew>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "LogReadNews", NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Url).IsRequired().HasMaxLength(256);
+            b.Property(x => x.DateRead).IsRequired().HasMaxLength(11);
         });
     }
 }

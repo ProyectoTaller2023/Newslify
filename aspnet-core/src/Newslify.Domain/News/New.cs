@@ -1,3 +1,5 @@
+using Newslify.Keywords;
+using Newslify.ReadingLists;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +16,8 @@ namespace Newslify.News
         public string Title { get; set; }
         public string Url { get; set; }
         public string Source { get; set; }
+
+        public ICollection<Keyword> Keywords { get; set; }
+        public ICollection<ReadingList> ReadingLists { get; set; }
     }
 }

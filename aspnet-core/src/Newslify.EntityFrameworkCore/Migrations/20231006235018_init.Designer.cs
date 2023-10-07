@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Newslify.Migrations
 {
     [DbContext(typeof(NewslifyDbContext))]
-    [Migration("20231006202732_init-migration")]
-    partial class initmigration
+    [Migration("20231006235018_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,51 @@ namespace Newslify.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("KeywordNew", b =>
+                {
+                    b.Property<int>("KeywordsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("KeywordsId", "NewsId");
+
+                    b.HasIndex("NewsId");
+
+                    b.ToTable("KeywordNew");
+                });
+
+            modelBuilder.Entity("KeywordReadingList", b =>
+                {
+                    b.Property<int>("KeywordsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReadingListsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("KeywordsId", "ReadingListsId");
+
+                    b.HasIndex("ReadingListsId");
+
+                    b.ToTable("KeywordReadingList");
+                });
+
+            modelBuilder.Entity("NewReadingList", b =>
+                {
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReadingListsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NewsId", "ReadingListsId");
+
+                    b.HasIndex("ReadingListsId");
+
+                    b.ToTable("NewReadingList");
+                });
 
             modelBuilder.Entity("Newslify.Keywords.Keyword", b =>
                 {
@@ -139,9 +184,6 @@ namespace Newslify.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ChildrenReadingListId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -153,14 +195,9 @@ namespace Newslify.Migrations
                     b.Property<int?>("ParentReadingListId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ParentReadingListId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("AppReadingLists", (string)null);
                 });
@@ -1826,21 +1863,58 @@ namespace Newslify.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
+            modelBuilder.Entity("KeywordNew", b =>
                 {
-                    b.HasOne("Newslify.ReadingLists.ReadingList", "ParentReadingList")
-                        .WithMany("ChildrenReadingList")
-                        .HasForeignKey("ParentReadingListId");
-
-                    b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
+                    b.HasOne("Newslify.Keywords.Keyword", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("KeywordsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ParentReadingList");
+                    b.HasOne("Newslify.News.New", null)
+                        .WithMany()
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("KeywordReadingList", b =>
+                {
+                    b.HasOne("Newslify.Keywords.Keyword", null)
+                        .WithMany()
+                        .HasForeignKey("KeywordsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Newslify.ReadingLists.ReadingList", null)
+                        .WithMany()
+                        .HasForeignKey("ReadingListsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("NewReadingList", b =>
+                {
+                    b.HasOne("Newslify.News.New", null)
+                        .WithMany()
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Newslify.ReadingLists.ReadingList", null)
+                        .WithMany()
+                        .HasForeignKey("ReadingListsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
+                {
+                    b.HasOne("Newslify.ReadingLists.ReadingList", "ParentReadingList")
+                        .WithMany()
+                        .HasForeignKey("ParentReadingListId");
+
+                    b.Navigation("ParentReadingList");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -1995,11 +2069,6 @@ namespace Newslify.Migrations
             modelBuilder.Entity("Newslify.Languages.Language", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
-                {
-                    b.Navigation("ChildrenReadingList");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

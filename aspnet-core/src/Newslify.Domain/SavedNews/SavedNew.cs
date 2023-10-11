@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities;
 
-namespace Newslify.News
+namespace Newslify.SavedNews
 {
-    public class New : Entity<int>
+    public class SavedNew : Entity<int>
     {
         public string Description { get; set; }
         public string Author { get; set; }

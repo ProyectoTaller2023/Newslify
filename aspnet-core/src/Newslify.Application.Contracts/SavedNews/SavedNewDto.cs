@@ -1,9 +1,9 @@
 using System;
 using Volo.Abp.Application.Dtos;
 
-namespace Newslify.News
+namespace Newslify.SavedNews
 {
-    public class NewDto : EntityDto<int>
+    public class SavedNewDto : EntityDto<int>
     {
         public string Description { get; set; }
         public string Author { get; set; }

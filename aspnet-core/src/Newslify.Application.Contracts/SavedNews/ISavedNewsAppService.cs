@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace Newslify.News
+namespace Newslify.SavedNews
 {
-    public interface INewAppService : IApplicationService
+    public interface ISavedNewsAppService : IApplicationService
     {
-        Task<ICollection<NewDto>> GetNewsAsync();
+        Task<ICollection<SavedNewDto>> GetSavedNewsAsync();
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities;
 using Newslify.ReadingLists;
-using Newslify.News;
+using Newslify.SavedNews;
 
 namespace Newslify.Keywords
 {
@@ -13,6 +13,6 @@ namespace Newslify.Keywords
     {
         public string KeyWord { get; set; }
         public ICollection<ReadingList> ReadingLists { get; set; }
-        public ICollection<New> News { get; set; }
+        public ICollection<SavedNew> SavedNews { get; set; }
     }
 }

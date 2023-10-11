@@ -7,22 +7,22 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace Newslify.News
+namespace Newslify.SavedNews
 {
-    public class NewAppService : NewslifyAppService, INewAppService
+    public class SavedNewsAppService : NewslifyAppService, ISavedNewsAppService
     {
-        private readonly IRepository<New, int> _repository;
+        private readonly IRepository<SavedNew, int> _repository;
 
-        public NewAppService(IRepository<New, int> repository)
+        public SavedNewsAppService(IRepository<SavedNew, int> repository)
         {
             _repository = repository;
         }
 
-        public async Task<ICollection<NewDto>> GetNewsAsync()
+        public async Task<ICollection<SavedNewDto>> GetSavedNewsAsync()
         {
-            var news = await _repository.GetListAsync();
+            var savedNews = await _repository.GetListAsync();
 
-            return ObjectMapper.Map<ICollection<New>, ICollection<NewDto>>(news);
+            return ObjectMapper.Map<ICollection<SavedNew>, ICollection<SavedNewDto>>(savedNews);
         }
 
         /* public async Task<ThemeDto> GetThemesAsync(int id)

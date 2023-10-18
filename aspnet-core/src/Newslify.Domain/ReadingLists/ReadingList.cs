@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Entities;
 using Volo.Abp.Identity;
 using Newslify.Keywords;
 using Abp.Authorization.Users;
-using Newslify.News;
+using Newslify.SavedNews;
 
 namespace Newslify.ReadingLists
 {
@@ -23,6 +23,6 @@ namespace Newslify.ReadingLists
 		public ReadingList? ParentReadingList { get; set; }
 
 		public ICollection<Keyword> Keywords { get; set; }
-		public ICollection<New> News { get; set; }
+		public ICollection<SavedNew> SavedNews { get; set; }
 	}
 }

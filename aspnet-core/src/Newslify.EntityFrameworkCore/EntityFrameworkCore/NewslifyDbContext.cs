@@ -15,7 +15,7 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Newslify.Languages;
 using Newslify.ReadingLists;
 using Newslify.Keywords;
-using Newslify.News;
+using Newslify.SavedNews;
 using Newslify.LogReadNews;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
@@ -64,7 +64,7 @@ public class NewslifyDbContext :
     public DbSet<Language> Languages { get; set; }
     public DbSet<ReadingList> ReadingLists { get; set; }
     public DbSet<Keyword> Keywords { get; set; }
-    public DbSet<New> News { get; set; }
+    public DbSet<SavedNew> SavedNews { get; set; }
     public DbSet<LogReadNew> LogReadNews { get; set; }
 
     #endregion
@@ -116,9 +116,9 @@ public class NewslifyDbContext :
         });
 
         /* New Entity*/
-        builder.Entity<New>(b =>
+        builder.Entity<SavedNew>(b =>
         {
-            b.ToTable(NewslifyConsts.DbTablePrefix + "News", NewslifyConsts.DbSchema);
+            b.ToTable(NewslifyConsts.DbTablePrefix + "SavedNews", NewslifyConsts.DbSchema);
             b.ConfigureByConvention();
             b.Property(x => x.Description).IsRequired().HasMaxLength(256);
             b.Property(x => x.Author).IsRequired().HasMaxLength(128);

@@ -4,14 +4,14 @@
 # Requerimientos funcionales
 
 ### General
-El usuario podrá registrarse en la aplicación   
-El usuario podrá ingresar a la aplicación mediante datos identificatorios del mismo.
+El usuario podrá registrarse en la aplicación 💹
+El usuario podrá ingresar a la aplicación mediante datos identificatorios del mismo.💹
 
 ### Funcionalidad administrativa
-El usuario podrá establecer diferentes datos de la cuenta, siendo uno de ellos el idioma preferido de las noticias visualizadas.
+El usuario podrá establecer diferentes datos de la cuenta, siendo uno de ellos el idioma preferido de las noticias visualizadas.💹
 
 ### Funcionalidad operativa  
-La funcionalidad operativa tiene como objetivo mostrar al usuario noticias aguapadas en listas.  
+La funcionalidad operativa tiene como objetivo mostrar al usuario noticias agrupadas en listas.  
 El usuario podrá buscar un tema puntual y agregar la noticia a una lista para su posterior lectura.  
 La aplicación deberá visualizar notoriamente las noticias leídas de las no.   
 Se podrán crear listas de temas con múltiples niveles de agrupamiento.   

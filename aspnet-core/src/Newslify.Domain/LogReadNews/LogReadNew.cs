@@ -1,3 +1,4 @@
+using Abp.Authorization.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace Newslify.LogReadNews
     {
         public string Url { get; set; }
         public DateTime DateRead { get; set; }
-        public Guid userId { get; set; }
+        public IdentityUser User { get; set; }
     }
 }

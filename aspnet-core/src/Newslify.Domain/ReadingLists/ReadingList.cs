@@ -16,8 +16,7 @@ namespace Newslify.ReadingLists
 		public string Name { get; set; }
 
 		// Relations
-        //public Guid UserId { get; set; }
-		//public AbpUser<Guid> User { get; set; }
+		public IdentityUser User { get; set; }
 
 		public int? ParentListId { get; set; }
 		public ReadingList? ParentReadingList { get; set; }

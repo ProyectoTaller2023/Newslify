@@ -1,6 +1,8 @@
 ﻿using System;
+using Newslify.Languages;
 
 public class User
 {
-     public int LanguageId { get; set; }
+     public Language Language { get; set; }
+     public int LanguageId { get; set; } = UserConsts.LanguagePropertyDefaultValue;
 }

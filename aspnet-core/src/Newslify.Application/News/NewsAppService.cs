@@ -17,7 +17,7 @@ namespace Newslify
         public async Task<string> GetNewsAsync(string LanguageIntCode, int amountNews)
          {
            var newsAPI = new HandlerNewsAPI();
-           string newsInJSON = await newsAPI.getNews("EN",1);// metodo que se conecte a la API y traiga las noticias
+           string newsInJSON = await newsAPI.getNews(LanguageIntCode.ToUpper(),amountNews);// metodo que se conecte a la API y traiga las noticias
 
            return newsInJSON;
          }

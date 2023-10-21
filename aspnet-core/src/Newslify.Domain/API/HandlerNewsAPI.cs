@@ -18,10 +18,13 @@ public class HandlerNewsAPI : INewsAPI
     {
         var articlesResponse = newsApiClient.GetEverything(new EverythingRequest
         {
+            Q = "news", // Filtro poco especifico para que devuelva noticias en general (necesario ya que sin filtro lo rechaza la API)
             SortBy = SortBys.Popularity,
             Language = Languages.EN, // Reveer como hacer para setearle distintos lenguajes
-            From = GetDateMonthAgoFromNow() // deberia obtener un DateTime un mes atras cada vez
-        });
+            From = GetDateMonthAgoFromNow(), // deberia obtener un DateTime un mes atras cada vez
+            Page = 1,
+            PageSize = amountNews ?? 20
+        }) ;
 
         if (articlesResponse.Status == Statuses.Ok)
         {

@@ -20,7 +20,7 @@ public class HandlerNewsAPI : INewsAPI
         {
             Q = "news", // Filtro poco especifico para que devuelva noticias en general (necesario ya que sin filtro lo rechaza la API)
             SortBy = SortBys.Popularity,
-            Language = Languages.EN, // Reveer como hacer para setearle distintos lenguajes
+            Language = GetLanguage(LanguageIntCode), // Reveer como hacer para setearle distintos lenguajes
             From = GetDateMonthAgoFromNow(), // deberia obtener un DateTime un mes atras cada vez
             Page = 1,
             PageSize = amountNews ?? 20
@@ -40,5 +40,30 @@ public class HandlerNewsAPI : INewsAPI
         DateTime date = DateTime.Now;
         date = date.AddMonths(-1);
         return date;
+    }
+
+    private NewsAPI.Constants.Languages GetLanguage(string LanguageIntCode)
+    {
+        switch (LanguageIntCode)
+        {
+            case "1":
+                return NewsAPI.Constants.Languages.EN;
+            case "2":
+                return NewsAPI.Constants.Languages.ES;
+            case "3":
+                return NewsAPI.Constants.Languages.PT;
+            case "4":
+                return NewsAPI.Constants.Languages.IT;
+            case "5":
+                return NewsAPI.Constants.Languages.FR;
+            case "6":
+                return NewsAPI.Constants.Languages.DE;
+            case "7":
+                return NewsAPI.Constants.Languages.RU;
+            case "8":
+                return NewsAPI.Constants.Languages.JP;
+            default:
+                return NewsAPI.Constants.Languages.EN;
+        }
     }
 }

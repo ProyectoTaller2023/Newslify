@@ -14,14 +14,14 @@ public class HandlerNewsAPI : INewsAPI
       newsApiClient = new NewsApiClient("10a2a9fc820944829819bd5ab8d705e0"); // deberia estar en una variable de entorno
     }
 
-    public async Task<string> getNews(string LanguageIntCode, int? amountNews)
+    public async Task<string> getNews(string LanguageIntCode, int? amountNews, string? query)
     {
         var articlesResponse = newsApiClient.GetEverything(new EverythingRequest
         {
-            Q = "news", // Filtro poco especifico para que devuelva noticias en general (necesario ya que sin filtro lo rechaza la API)
+            Q = query ?? "news", // Si no te pasan nada, aplica "news", un filtro poco especifico para que devuelva noticias en general 
             SortBy = SortBys.Popularity,
-            Language = GetLanguage(LanguageIntCode), // Reveer como hacer para setearle distintos lenguajes
-            From = GetDateMonthAgoFromNow(), // deberia obtener un DateTime un mes atras cada vez
+            Language = GetLanguage(LanguageIntCode),
+            From = GetDateMonthAgoFromNow(),
             Page = 1,
             PageSize = amountNews ?? 20
         }) ;
@@ -42,6 +42,7 @@ public class HandlerNewsAPI : INewsAPI
         return date;
     }
 
+    // Analiza los case segun los valores del data seeder de la db. LanguageIntCode seria el languageId del usuario.
     private NewsAPI.Constants.Languages GetLanguage(string LanguageIntCode)
     {
         switch (LanguageIntCode)

@@ -18,12 +18,20 @@ namespace Newslify.ReadingLists
             _repository = repository;
         }
 
+        // hay que editar para que devuelva la lista de lectura de un usuario específico.
 
         public async Task<ICollection<ReadingListDto>> GetReadingListsAsync()
         {
             var readingLists = await _repository.GetListAsync();
 
             return ObjectMapper.Map<ICollection<ReadingList>, ICollection<ReadingListDto>>(readingLists);
+        }
+
+        public async Task<ReadingListDto> PostReadingListAsync(string UserId, string Name, string? ParentListId)
+        {
+            ReadingList ReadingList = new ReadingList(UserId, Name, ParentListId);
+            var response = await _repository.InsertAsync(ReadingList);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }
 
         /* public async Task<ThemeDto> GetThemesAsync(int id)

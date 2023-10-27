@@ -10,5 +10,6 @@ namespace Newslify.ReadingLists
 	public interface IReadingListsAppService : IApplicationService
 	{
 		Task<ICollection<ReadingListDto>> GetReadingListsAsync();
-	}
+		Task<ReadingListDto> PostReadingListAsync(string UserId, string Name, string? ParentListId);
+    }
 }

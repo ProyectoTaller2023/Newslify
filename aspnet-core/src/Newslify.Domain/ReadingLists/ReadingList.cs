@@ -13,15 +13,46 @@ namespace Newslify.ReadingLists
 {
 	public class ReadingList : Entity<int>
 	{
-		public string Name { get; set; }
+        public ReadingList()
+        {
+            // Constructor sin parámetros
+        }
 
-		// Relations
-		public IdentityUser User { get; set; }
+        public ReadingList(string UserId, string Name, string? ParentListId)
+            {
+                if (Guid.TryParse(UserId, out Guid UserIdGuid))
+                {
+                    this.UserId = UserIdGuid;
+                }
+                else
+                {
+                    throw new ArgumentException("El valor de UserId no es un Guid válido.");
+                }
+
+                this.Name = Name;
+
+                if (int.TryParse(ParentListId, out int ParentListInteger))
+                {
+                    this.ParentListId = ParentListInteger;
+                }
+                else
+                {
+                    this.ParentListId = null; // Opcionalmente puedes asignar null en caso de conversión fallida.
+                }
+            }
+
+        public string Name { get; set; }
+
+        // Relations
+        public Guid UserId { get; set; }
+        public IdentityUser User { get; set; }
 
 		public int? ParentListId { get; set; }
 		public ReadingList? ParentReadingList { get; set; }
 
 		public ICollection<Keyword> Keywords { get; set; }
 		public ICollection<SavedNew> SavedNews { get; set; }
+		
 	}
+
 }

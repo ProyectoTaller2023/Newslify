@@ -6,7 +6,7 @@ using Volo.Abp.Application.Services;
 
     public interface INewsAppService : IApplicationService
     {
-        Task<string> GetNewsAsync(string LanguageIntCode, int amountNews);
+        Task<string> GetNewsAsync(string LanguageIntCode, int? amountNews, string? query);
     }
 
 

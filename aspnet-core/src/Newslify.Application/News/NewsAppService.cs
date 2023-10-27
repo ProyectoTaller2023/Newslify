@@ -14,10 +14,10 @@ namespace Newslify
         {
         }
 
-        public async Task<string> GetNewsAsync(string LanguageIntCode, int amountNews)
+        public async Task<string> GetNewsAsync(string LanguageIntCode, int? amountNews, string? query)
          {
            var newsAPI = new HandlerNewsAPI();
-           string newsInJSON = await newsAPI.getNews(LanguageIntCode.ToUpper(),amountNews);// metodo que se conecte a la API y traiga las noticias
+           string newsInJSON = await newsAPI.getNews(LanguageIntCode.ToUpper(),amountNews, query);// metodo que se conecte a la API y traiga las noticias
 
            return newsInJSON;
          }

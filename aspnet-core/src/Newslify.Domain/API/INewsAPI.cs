@@ -3,5 +3,5 @@ using System.Threading.Tasks;
 
 public interface INewsAPI
 {
-     Task<string> getNews(string LanguageIntCode, int? amountNews);
+     Task<string> getNews(string LanguageIntCode, int? amountNews, string? query);
 }

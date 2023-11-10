@@ -4,9 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 
+namespace Newslify
+{
     public interface INewsAppService : IApplicationService
     {
-        Task<string> GetNewsAsync(string LanguageIntCode, int? amountNews, string? query);
+        Task<ICollection<NewsDto>> GetNewsAsync(string LanguageIntCode, int? amountNews, string? query);
     }
-
+}
 

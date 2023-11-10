@@ -6,6 +6,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Newslify;
 
@@ -27,5 +28,8 @@ public class NewslifyApplicationModule : AbpModule
         {
             options.AddMaps<NewslifyApplicationModule>();
         });
+
+        //se registra el servicio de noticias. Deberia registrarse solo, pero como me dio error lo incorporo aca
+        context.Services.AddTransient<INewsAPI, HandlerNewsAPI>();
     }
 }

@@ -4,8 +4,10 @@ using Newslify.Languages;
 using Newslify.LogReadNews;
 using Newslify.SavedNews;
 using Newslify.ReadingLists;
+using Newslify.Users;
+using Volo.Abp.Identity;
 
-namespace Newslify;
+namespace Newslify; 
 
 public class NewslifyApplicationAutoMapperProfile : Profile
 {
@@ -19,5 +21,7 @@ public class NewslifyApplicationAutoMapperProfile : Profile
         CreateMap<Keyword, KeywordDto>();
         CreateMap<LogReadNew, LogReadNewDto>();
         CreateMap<ReadingList, ReadingListDto>();
+        CreateMap<IdentityUser, UserDto>();
+        CreateMap<NewsDto, ArticleDto>().ReverseMap();
     }
 }

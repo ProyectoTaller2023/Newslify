@@ -52,6 +52,10 @@ namespace Newslify.ReadingLists
 
 		public ICollection<Keyword> Keywords { get; set; }
 		public ICollection<SavedNew> SavedNews { get; set; }
+
+        // la entidad deberia tener un metodo para agregar una palabra clave a la lista de keywords
+
+        // la entidad deberia tener un metodo para agregar una noticia a la lista de noticias
 		
 	}
 

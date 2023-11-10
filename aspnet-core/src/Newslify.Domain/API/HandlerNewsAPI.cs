@@ -1,21 +1,26 @@
-using System;
-using System.Text.Json;
 using NewsAPI;
-using NewsAPI.Models;
 using NewsAPI.Constants;
+using NewsAPI.Models;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using static OpenIddict.Abstractions.OpenIddictConstants;
+using Statuses = NewsAPI.Constants.Statuses;
 
+namespace Newslify
+{
 public class HandlerNewsAPI : INewsAPI
 {
-    NewsApiClient newsApiClient;
-
-    public HandlerNewsAPI()
+    public async Task<ICollection<ArticleDto>> getNews(string LanguageIntCode, int? amountNews, string? query)
     {
-      newsApiClient = new NewsApiClient("10a2a9fc820944829819bd5ab8d705e0"); // deberia estar en una variable de entorno
-    }
 
-    public async Task<string> getNews(string LanguageIntCode, int? amountNews, string? query)
-    {
+       NewsApiClient newsApiClient = new NewsApiClient("10a2a9fc820944829819bd5ab8d705e0"); // deberia estar en una variable de entorno
+       
+       ICollection<ArticleDto> responseList = new List<ArticleDto>();
+
         var articlesResponse = newsApiClient.GetEverything(new EverythingRequest
         {
             Q = query ?? "news", // Si no te pasan nada, aplica "news", un filtro poco especifico para que devuelva noticias en general 
@@ -25,10 +30,21 @@ public class HandlerNewsAPI : INewsAPI
             Page = 1,
             PageSize = amountNews ?? 20
         }) ;
-
+     
         if (articlesResponse.Status == Statuses.Ok)
         {
-            return JsonSerializer.Serialize(articlesResponse.Articles);
+                articlesResponse.Articles.ForEach(t => responseList.Add(new ArticleDto
+                {
+                    Author = t.Author,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Url = t.Url,
+                    PublishedAt = t.PublishedAt,
+                    UrlToImage = t.UrlToImage,
+                    Content = t.Content
+                }));
+
+                return responseList;
         }
 
         throw new Exception("La solicitud de la API no fue exitosa. Status: " + articlesResponse.Status);
@@ -67,4 +83,5 @@ public class HandlerNewsAPI : INewsAPI
                 return NewsAPI.Constants.Languages.EN;
         }
     }
+}
 }

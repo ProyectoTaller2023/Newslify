@@ -1,29 +1,18 @@
 # Newslify
-➡ Aplicacion de noticias usando .NET ABP Framework para el backend y Angular en frontend. 
+➡ Aplicacion backend de noticias usando .NET ABP Framework.   
 
 # Requerimientos funcionales
+[X] Realizar una búsqueda en NewsApi y devolver los resultados.   
+[X] Crear y actualizar una lista de lectura.   
+[]  Eliminar una lista de lectura.   
+[]  Agregar un texto resultado de busqueda a una lista de lectura.   
+[]  Crear una alerta de nuevas noticias a partir de un texto de búsqueda.   
+[]  Obtener la informacion de notificaciones de las alertas del usuario para el área de notificación. ( Este método no realiza la busqueda en la API, solamente deberá devolver la información persistida).   
+[]  Ejecucion asincrónica que busque los textos de las alertas en la API y persista la información de las notificaciones. Opcional envío de mail.   
+[]  Obtención información estadística de monitoreo de los accesos a la API.   
 
-### General
-💹 El usuario podrá registrarse en la aplicación   
-💹 El usuario podrá ingresar a la aplicación mediante datos identificatorios del mismo.
+# Test
+[]  Todos los métodos deberán tener pruebas unitarias y/o de integración.   
 
-### Funcionalidad administrativa
-💹 El usuario podrá establecer diferentes datos de la cuenta, siendo uno de ellos el idioma preferido de las noticias visualizadas.   
+Las funcionalidades a nivel frontend no serán obligatorias pero serán bienvenidas y reconocidas.
 
-### Funcionalidad operativa  
-La funcionalidad operativa tiene como objetivo mostrar al usuario noticias agrupadas en listas.  
-El usuario podrá buscar un tema puntual y agregar la noticia a una lista para su posterior lectura.  
-La aplicación deberá visualizar notoriamente las noticias leídas de las no.   
-Se podrán crear listas de temas con múltiples niveles de agrupamiento.   
-
-### Alertas de nuevas noticias.
-El usuario podrá crear una alerta sobre si una búsqueda de un tema no trajo resultados o sobre una lista si aparecen nuevas noticias.   
-Al configurarse las alertas el sistema buscará periódicamente dichas alertas y notificará al usuario de resultados exitosos.
-
-Las alertas generadas se deberán manifestar de dos maneras diferentes:
-Se deberá mostrar en un área de notificación en el panel de lectura, la información de las alertas de la última semana.   
-Se deberá enviar un mail al usuario manifestando la situación.
-
-### Monitoreo
-El usuario podrá acceder al panel de monitoreo de la API en donde se visualizarán datos de accesos realizados a la API como ser cantidad de accesos, tiempos promedio de acceso, cantidad de errores, etc.   
-La aplicación deberá contener una bitácora de monitoreo (archivo de log), que permita hacer diagnósticos ante la ocurrencia de errores

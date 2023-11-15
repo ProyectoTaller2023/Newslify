@@ -102,13 +102,32 @@ namespace Newslify.ReadingLists
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }
 
+        public async Task DeleteAsync(string id)
+        {
+            int idInt;
+            if (!int.TryParse(id, out idInt))
+            {
+                // Manejar el caso en el que la conversión no fue exitosa
+                throw new Exception("El id proporcionado no es un número válido.");
+            }
 
-
-        /* public async Task<ThemeDto> GetThemesAsync(int id)
-         {
-             var theme = await _repository.GetAsync(id);
-
-             return ObjectMapper.Map<Theme, ThemeDto>(theme);
-         }*/
+            var existingReadingList = await _repository.GetAsync(idInt);
+            if (existingReadingList != null)
+            {
+                await _repository.DeleteAsync(existingReadingList);
+            }
+            else
+            {
+                throw new Exception("No existe una entidad con ese id.");
+            }
+        }
     }
+
+
+    /* public async Task<ThemeDto> GetThemesAsync(int id)
+     {
+         var theme = await _repository.GetAsync(id);
+
+         return ObjectMapper.Map<Theme, ThemeDto>(theme);
+     }*/
 }

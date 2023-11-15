@@ -14,5 +14,6 @@ namespace Newslify.ReadingLists
         Task<ReadingListDto> UpdateNameAsync(string id, string newName);
 		Task<ReadingListDto> UpdateParentIdAsync(string id, string newParentId);
 		Task<ReadingListDto> AddKeywordsAsync(string id, ICollection<string> newKeywords);
+		Task DeleteAsync(string id);
     }
 }

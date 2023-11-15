@@ -11,6 +11,11 @@ namespace Newslify.Keywords
 {
     public class Keyword : Entity<int>
     {
+        public Keyword(string KeyWord)
+        {
+            this.KeyWord = KeyWord;
+        }
+
         public string KeyWord { get; set; }
         public ICollection<ReadingList> ReadingLists { get; set; }
         public ICollection<SavedNew> SavedNews { get; set; }

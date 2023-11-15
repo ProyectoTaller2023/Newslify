@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Newslify.Keywords;
 
 namespace Newslify.ReadingLists
 {
@@ -33,6 +34,75 @@ namespace Newslify.ReadingLists
             var response = await _repository.InsertAsync(ReadingList);
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }
+
+        public async Task<ReadingListDto> UpdateNameAsync(string id, string newName)
+        {
+
+            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
+            var existingReadingList = await _repository.GetAsync(idInt); 
+            if (existingReadingList == null)
+            {
+                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
+            }
+
+            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
+            // Modificaciones....
+            existingReadingList.Name = newName;
+
+            var response = await _repository.UpdateAsync(existingReadingList);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+        }
+
+        public async Task<ReadingListDto> UpdateParentIdAsync(string id, string newParentId)
+        {
+
+            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
+            int newParentIdInt = int.TryParse(newParentId, out newParentIdInt) ? newParentIdInt : -1;
+
+            if (newParentIdInt == -1)
+            {
+                throw new Exception($"El id del padre es invalido. Id: {newParentId}");
+            }
+
+            var existingReadingList = await _repository.GetAsync(idInt);
+            if (existingReadingList == null)
+            {
+                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
+            }
+
+            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
+            // Modificaciones....
+            existingReadingList.ParentListId = newParentIdInt;
+            existingReadingList.ParentReadingList = await _repository.GetAsync(newParentIdInt);
+
+            var response = await _repository.UpdateAsync(existingReadingList);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+        }
+
+        public async Task<ReadingListDto> AddKeywordsAsync(string id, ICollection<string> newKeywords)
+        {
+
+            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
+
+            var existingReadingList = await _repository.GetAsync(idInt);
+            if (existingReadingList == null)
+            {
+                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
+            }
+
+            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
+            // Modificaciones....
+            foreach (string keyword in newKeywords)
+            {
+               // await _repository.
+                existingReadingList.Keywords.Add(new Keyword(keyword));
+            }
+
+            var response = await _repository.UpdateAsync(existingReadingList);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+        }
+
+
 
         /* public async Task<ThemeDto> GetThemesAsync(int id)
          {

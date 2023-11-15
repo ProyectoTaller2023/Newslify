@@ -34,6 +34,45 @@ namespace Newslify.ReadingLists
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }
 
+        public async Task<ReadingListDto> UpdateNameAsync(string id, string newName)
+        {
+
+            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
+            var existingReadingList = await _repository.GetAsync(idInt); 
+            if (existingReadingList == null)
+            {
+                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
+            }
+
+            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
+            // Modificaciones....
+            existingReadingList.Name = newName;
+
+            var response = await _repository.UpdateAsync(existingReadingList);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+        }
+
+       /* public async Task<ReadingListDto> UpdateName (string id)
+        {
+
+            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
+            var existingReadingList = await _repository.GetAsync(idInt);
+            if (existingReadingList == null)
+            {
+                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
+            }
+
+            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
+            // Modificaciones....
+            existingReadingList.ParentReadingList = null;
+
+
+            var response = await _repository.UpdateAsync(existingReadingList);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+        }*/
+
+
+
         /* public async Task<ThemeDto> GetThemesAsync(int id)
          {
              var theme = await _repository.GetAsync(id);

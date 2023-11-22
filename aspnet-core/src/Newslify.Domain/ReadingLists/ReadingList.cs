@@ -16,11 +16,16 @@ namespace Newslify.ReadingLists
         public ReadingList()
         {
             // Constructor sin parámetros
+            this.Keywords = new List<Keyword>();
+            this.SavedNews = new List<SavedNew>();
         }
 
         public ReadingList(string UserId, string Name, string? ParentListId)
             {
-                if (Guid.TryParse(UserId, out Guid UserIdGuid))
+            this.Keywords = new List<Keyword>();
+            this.SavedNews = new List<SavedNew>();
+
+            if (Guid.TryParse(UserId, out Guid UserIdGuid))
                 {
                     this.UserId = UserIdGuid;
                 }
@@ -55,7 +60,6 @@ namespace Newslify.ReadingLists
 
         // la entidad deberia tener un metodo para agregar una palabra clave a la lista de keywords
         // la entidad deberia tener un metodo para agregar una noticia a la lista de noticias
-
     }
 
 }

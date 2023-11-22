@@ -8,15 +8,23 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Newslify.Keywords;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Newslify.Permissions;
+using Volo.Abp.Identity;
+using Volo.Abp.Users;
+
 namespace Newslify.ReadingLists
 {
     public class ReadingListAppService : NewslifyAppService, IReadingListsAppService 
     {
         private readonly IRepository<ReadingList, int> _repository;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ReadingListAppService(IRepository<ReadingList, int> repository)
+        public ReadingListAppService(IRepository<ReadingList, int> repository, UserManager<IdentityUser> userManager)
         {
             _repository = repository;
+            _userManager = userManager;
         }
 
         // hay que editar para que devuelva la lista de lectura de un usuario específico.
@@ -26,11 +34,28 @@ namespace Newslify.ReadingLists
             var readingLists = await _repository.GetListAsync();
 
             return ObjectMapper.Map<ICollection<ReadingList>, ICollection<ReadingListDto>>(readingLists);
+
         }
 
-        public async Task<ReadingListDto> PostReadingListAsync(string UserId, string Name, string? ParentListId)
+        public async Task<ReadingListDto> GetReadingListAsync(int id)
         {
-            ReadingList ReadingList = new ReadingList(UserId, Name, ParentListId);
+            var queryable = await _repository.WithDetailsAsync(x => x.ReadingLists);
+
+            var query = queryable.Where(x => x.Id == id);
+
+            var theme = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+            return ObjectMapper.Map<Theme, ThemeDto>(theme);
+
+        }
+
+        public async Task<ReadingListDto> PostReadingListAsync(string UserId, string Name)
+        {
+            var userGuid = CurrentUser.Id.GetValueOrDefault();
+            var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());
+
+            ReadingList ReadingList = new ReadingList();
+            ReadingList.Name = Name;
             var response = await _repository.InsertAsync(ReadingList);
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }
@@ -48,32 +73,6 @@ namespace Newslify.ReadingLists
             // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
             // Modificaciones....
             existingReadingList.Name = newName;
-
-            var response = await _repository.UpdateAsync(existingReadingList);
-            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
-        }
-
-        public async Task<ReadingListDto> UpdateParentIdAsync(string id, string newParentId)
-        {
-
-            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
-            int newParentIdInt = int.TryParse(newParentId, out newParentIdInt) ? newParentIdInt : -1;
-
-            if (newParentIdInt == -1)
-            {
-                throw new Exception($"El id del padre es invalido. Id: {newParentId}");
-            }
-
-            var existingReadingList = await _repository.GetAsync(idInt);
-            if (existingReadingList == null)
-            {
-                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
-            }
-
-            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
-            // Modificaciones....
-            existingReadingList.ParentListId = newParentIdInt;
-            existingReadingList.ParentReadingList = await _repository.GetAsync(newParentIdInt);
 
             var response = await _repository.UpdateAsync(existingReadingList);
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);

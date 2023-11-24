@@ -11,52 +11,26 @@ using Newslify.SavedNews;
 
 namespace Newslify.ReadingLists
 {
-	public class ReadingList : Entity<int>
-	{
+    public class ReadingList : Entity<int>
+    {
         public ReadingList()
         {
-            // Constructor sin parámetros
             this.Keywords = new List<Keyword>();
             this.SavedNews = new List<SavedNew>();
+            this.ReadingLists = new List<ReadingList>();
         }
-
-        public ReadingList(string UserId, string Name, string? ParentListId)
-            {
-            this.Keywords = new List<Keyword>();
-            this.SavedNews = new List<SavedNew>();
-
-            if (Guid.TryParse(UserId, out Guid UserIdGuid))
-                {
-                    this.UserId = UserIdGuid;
-                }
-                else
-                {
-                    throw new ArgumentException("El valor de UserId no es un Guid válido.");
-                }
-
-                this.Name = Name;
-
-                if (int.TryParse(ParentListId, out int ParentListInteger))
-                {
-                    this.ParentListId = ParentListInteger;
-                }
-                else
-                {
-                    this.ParentListId = null; // Opcionalmente puedes asignar null en caso de conversión fallida.
-                }
-            }
 
         public string Name { get; set; }
 
         // Relations
-        public Guid UserId { get; set; }
+        //public Guid UserId { get; set; }
         public IdentityUser User { get; set; }
 
-		public int? ParentListId { get; set; }
-		public ReadingList? ParentReadingList { get; set; }
+        public ICollection<Keyword> Keywords { get; set; }
+        public ICollection<SavedNew> SavedNews { get; set; }
 
-		public ICollection<Keyword> Keywords { get; set; }
-		public ICollection<SavedNew> SavedNews { get; set; }
+        public ICollection<ReadingList> ReadingLists{ get; set; }
+        
 
         // la entidad deberia tener un metodo para agregar una palabra clave a la lista de keywords
         // la entidad deberia tener un metodo para agregar una noticia a la lista de noticias

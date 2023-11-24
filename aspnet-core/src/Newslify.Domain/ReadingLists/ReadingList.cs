@@ -15,13 +15,6 @@ namespace Newslify.ReadingLists
     {
         public ReadingList()
         {
-            // Constructor sin parámetros
-            this.Keywords = new List<Keyword>();
-            this.SavedNews = new List<SavedNew>();
-        }
-
-        public ReadingList()
-        {
             this.Keywords = new List<Keyword>();
             this.SavedNews = new List<SavedNew>();
             this.ReadingLists = new List<ReadingList>();

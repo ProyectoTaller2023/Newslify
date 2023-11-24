@@ -13,15 +13,17 @@ using Microsoft.AspNetCore.Identity;
 using Newslify.Permissions;
 using Volo.Abp.Identity;
 using Volo.Abp.Users;
+using System.Security.Principal;
 
 namespace Newslify.ReadingLists
 {
+    [Authorize]
     public class ReadingListAppService : NewslifyAppService, IReadingListsAppService 
     {
         private readonly IRepository<ReadingList, int> _repository;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;
 
-        public ReadingListAppService(IRepository<ReadingList, int> repository, UserManager<IdentityUser> userManager)
+        public ReadingListAppService(IRepository<ReadingList, int> repository, UserManager<Volo.Abp.Identity.IdentityUser> userManager)
         {
             _repository = repository;
             _userManager = userManager;
@@ -43,19 +45,20 @@ namespace Newslify.ReadingLists
 
             var query = queryable.Where(x => x.Id == id);
 
-            var theme = await AsyncExecuter.FirstOrDefaultAsync(query);
+            var readingList = await AsyncExecuter.FirstOrDefaultAsync(query);
 
-            return ObjectMapper.Map<Theme, ThemeDto>(theme);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(readingList);
 
         }
 
-        public async Task<ReadingListDto> PostReadingListAsync(string UserId, string Name)
+        public async Task<ReadingListDto> PostReadingListAsync(string Name)
         {
             var userGuid = CurrentUser.Id.GetValueOrDefault();
             var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());
 
             ReadingList ReadingList = new ReadingList();
             ReadingList.Name = Name;
+            ReadingList.User = identityUser;
             var response = await _repository.InsertAsync(ReadingList);
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }

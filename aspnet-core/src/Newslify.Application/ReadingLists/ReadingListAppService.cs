@@ -7,24 +7,28 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Newslify.Keywords;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Newslify.Permissions;
 using Volo.Abp.Identity;
 using Volo.Abp.Users;
+using System.Security.Principal;
 
 namespace Newslify.ReadingLists
 {
+    [Authorize]
     public class ReadingListAppService : NewslifyAppService, IReadingListsAppService 
     {
         private readonly IRepository<ReadingList, int> _repository;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;
+        private readonly ReadingListManager _readinglistManager;
 
-        public ReadingListAppService(IRepository<ReadingList, int> repository, UserManager<IdentityUser> userManager)
+        public ReadingListAppService(IRepository<ReadingList, int> repository, UserManager<Volo.Abp.Identity.IdentityUser> userManager, ReadingListManager readinglistManager
+          )
         {
             _repository = repository;
             _userManager = userManager;
+            _readinglistManager = readinglistManager;
         }
 
         // hay que editar para que devuelva la lista de lectura de un usuario específico.
@@ -43,21 +47,26 @@ namespace Newslify.ReadingLists
 
             var query = queryable.Where(x => x.Id == id);
 
-            var theme = await AsyncExecuter.FirstOrDefaultAsync(query);
+            var readingList = await AsyncExecuter.FirstOrDefaultAsync(query);
 
-            return ObjectMapper.Map<Theme, ThemeDto>(theme);
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(readingList);
 
         }
 
-        public async Task<ReadingListDto> PostReadingListAsync(string UserId, string Name)
+        public async Task<ReadingListDto> PostReadingListAsync(CreateReadingListDto input)
         {
             var userGuid = CurrentUser.Id.GetValueOrDefault();
             var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());
-
-            ReadingList ReadingList = new ReadingList();
-            ReadingList.Name = Name;
-            var response = await _repository.InsertAsync(ReadingList);
-            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+            var readinglist = await _readinglistManager.getReadingListUpdated(input.Id, input.Name, input.ParentId, identityUser);
+            if (input.Id is null)
+            {
+                readinglist = await _repository.InsertAsync(readinglist, autoSave: true);
+            }
+            else
+            {
+                await _repository.UpdateAsync(readinglist, autoSave: true);
+            }
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(readinglist);
         }
 
         public async Task<ReadingListDto> UpdateNameAsync(string id, string newName)
@@ -101,7 +110,7 @@ namespace Newslify.ReadingLists
             return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<string> DeleteAsync(string id)
         {
             int idInt;
             if (!int.TryParse(id, out idInt))
@@ -119,6 +128,7 @@ namespace Newslify.ReadingLists
             {
                 throw new Exception("No existe una entidad con ese id.");
             }
+            return "Se ha eliminado correctamente";
         }
     }
 

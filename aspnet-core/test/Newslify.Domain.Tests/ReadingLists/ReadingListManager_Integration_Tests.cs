@@ -6,9 +6,9 @@ using Shouldly;
 using Volo.Abp.Users;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.Domain.Repositories;
+using Newslify.SavedNews;
 
 namespace Newslify.ReadingLists;
-
 public class ReadingListManager_Integration_Tests : NewslifyDomainTestBase
 {
     private readonly ReadingListManager _readingListManager;
@@ -44,19 +44,53 @@ public class ReadingListManager_Integration_Tests : NewslifyDomainTestBase
     }
 
     [Fact]
-    public async Task Should_Update_Reading_List()
-        {
-            // Arrange
-            var name = "Lista de lectura actualizada!";
-            int? parentId = null;
-            string? keyword = "Finanzas";
+    public async Task Should_Update_Name_Reading_List()
+    {
+        // Arrange
+        var name = "Lista de lectura actualizada!";
          
-            // Act
-            var readingList = await _readingListManager.getReadingListToUpdate(1,name, parentId, keyword, null);
+        // Act
+        var readingList = await _readingListManager.getReadingListToUpdate(1,name, null, null, null);
 
-            //Assert
-            readingList.ShouldNotBeNull();
-            readingList.Name.ShouldBe(name);
-            readingList.Keywords.ShouldContain(k => k.KeyWord == keyword);
-        }
+        //Assert
+        readingList.ShouldNotBeNull();
+        readingList.Name.ShouldBe(name);
     }
+
+    [Fact]
+    public async Task Should_Add_Keyword_Reading_List()
+    {
+        // Arrange
+        string keyword = "Finanzas";
+
+        // Act
+        var readingList = await _readingListManager.getReadingListToUpdate(1, null, null, keyword, null);
+
+        //Assert
+        readingList.ShouldNotBeNull();
+        readingList.Keywords.ShouldContain(k => k.KeyWord == keyword);
+    }
+
+    [Fact]
+    public async Task Should_Add_News_Reading_List()
+    {
+        // Arrange
+        SavedNew news = new()
+        {
+            Author = "Autor",
+            Title = "Titulo",
+            Description = "Descripcion",
+            Url = "##UniqueUrl##",
+            UrlToImage = "UrlToImage",
+            PublishedAt = DateTime.Now,
+            Content = "Content"
+        };  
+
+        // Act
+        var readingList = await _readingListManager.getReadingListToUpdate(1, null, null, null, news);
+
+        //Assert
+        readingList.ShouldNotBeNull();
+        readingList.SavedNews.ShouldContain(n => n.Url == news.Url);
+    }
+}

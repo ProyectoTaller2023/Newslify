@@ -18,10 +18,12 @@ public class NewslifyApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         CreateMap<Language, LanguageDto>();
         CreateMap<SavedNew, SavedNewDto>();
-        CreateMap<Keyword, KeywordDto>();
+        CreateMap<SavedNewDto, SavedNew>();
+        CreateMap<Keyword, KeywordDto>().ReverseMap();
         CreateMap<LogReadNew, LogReadNewDto>();
-        CreateMap<ReadingList, ReadingListDto>();
+        CreateMap<ReadingList, ReadingListDto>().ReverseMap();
         CreateMap<IdentityUser, UserDto>();
         CreateMap<NewsDto, ArticleDto>().ReverseMap();
+        CreateMap<NewsDto, SavedNew>().ReverseMap();
     }
 }

@@ -13,6 +13,8 @@ using Newslify.Permissions;
 using Volo.Abp.Identity;
 using Volo.Abp.Users;
 using System.Security.Principal;
+using Newslify;
+using Newslify.SavedNews;
 
 namespace Newslify.ReadingLists
 {
@@ -57,57 +59,27 @@ namespace Newslify.ReadingLists
         {
             var userGuid = CurrentUser.Id.GetValueOrDefault();
             var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());
-            var readinglist = await _readinglistManager.getReadingListUpdated(input.Id, input.Name, input.ParentId, identityUser);
-            if (input.Id is null)
-            {
-                readinglist = await _repository.InsertAsync(readinglist, autoSave: true);
-            }
-            else
-            {
-                await _repository.UpdateAsync(readinglist, autoSave: true);
-            }
+            var readinglist = await _readinglistManager.getReadingListToCreate(input.Name, input.ParentId, identityUser);
+           
+            readinglist = await _repository.InsertAsync(readinglist, autoSave: true);
+          
             return ObjectMapper.Map<ReadingList, ReadingListDto>(readinglist);
         }
 
-        public async Task<ReadingListDto> UpdateNameAsync(string id, string newName)
+        public async Task<ReadingListDto> PutReadingListAsync(UpdateReadingListDto input)
         {
+            SavedNew news = null;
 
-            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
-            var existingReadingList = await _repository.GetAsync(idInt); 
-            if (existingReadingList == null)
+            if (input.News is not null)
             {
-                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
+                news = ObjectMapper.Map<NewsDto, SavedNew>(input.News);
             }
 
-            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
-            // Modificaciones....
-            existingReadingList.Name = newName;
-
-            var response = await _repository.UpdateAsync(existingReadingList);
-            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
-        }
-
-        public async Task<ReadingListDto> AddKeywordsAsync(string id, ICollection<string> newKeywords)
-        {
-
-            int idInt = int.TryParse(id, out idInt) ? idInt : -1;
-
-            var existingReadingList = await _repository.GetAsync(idInt);
-            if (existingReadingList == null)
-            {
-                throw new Exception($"No existe la lista de lectura a modificar, el id es invalido. Id: {id}");
-            }
-
-            // Habria que ver que otros parametros recibe y hacer cosas de acuerdo a eso
-            // Modificaciones....
-            foreach (string keyword in newKeywords)
-            {
-               // await _repository.
-                existingReadingList.Keywords.Add(new Keyword(keyword));
-            }
-
-            var response = await _repository.UpdateAsync(existingReadingList);
-            return ObjectMapper.Map<ReadingList, ReadingListDto>(response);
+            var readinglistModified = await _readinglistManager.getReadingListToUpdate(input.Id, input.Name, input.ParentId, input.Keyword, news);
+          
+            var readinglistUpdated = await _repository.UpdateAsync(readinglistModified, autoSave: true);
+          
+            return ObjectMapper.Map<ReadingList, ReadingListDto>(readinglistUpdated);
         }
 
         public async Task<string> DeleteAsync(string id)

@@ -124,7 +124,6 @@ public class NewslifyDbContext :
             b.Property(x => x.Author).IsRequired().HasMaxLength(128);
             b.Property(x => x.Title).IsRequired().HasMaxLength(256);
             b.Property(x => x.Url).IsRequired().HasMaxLength(256);
-            b.Property(x => x.Source).IsRequired().HasMaxLength(128);
         });
 
         /* ReadingList Entity*/

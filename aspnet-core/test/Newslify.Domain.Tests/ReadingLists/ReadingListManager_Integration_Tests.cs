@@ -1,17 +1,11 @@
-using Volo.Abp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Microsoft.AspNetCore.Identity;
-using Volo.Abp.Identity;
 using Shouldly;
 using Volo.Abp.Users;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.Domain.Repositories;
-using Newslify;
 
 namespace Newslify.ReadingLists;
 
@@ -38,7 +32,6 @@ public class ReadingListManager_Integration_Tests : NewslifyDomainTestBase
         // Arrange
         var name = "Nueva lista de lectura!";
         int? parentId = null;
-       // var userId = await _userManager.FindByIdAsync(_currentUser.Id.GetValueOrDefault().ToString());
         var user = await _identityRepository.GetAsync(_currentUser.Id.GetValueOrDefault());
 
         // Act
@@ -50,4 +43,20 @@ public class ReadingListManager_Integration_Tests : NewslifyDomainTestBase
         readingList.User.ShouldBe(user);
     }
 
-}
+    [Fact]
+    public async Task Should_Update_Reading_List()
+        {
+            // Arrange
+            var name = "Lista de lectura actualizada!";
+            int? parentId = null;
+            string? keyword = "Finanzas";
+         
+            // Act
+            var readingList = await _readingListManager.getReadingListToUpdate(1,name, parentId, keyword, null);
+
+            //Assert
+            readingList.ShouldNotBeNull();
+            readingList.Name.ShouldBe(name);
+            readingList.Keywords.ShouldContain(k => k.KeyWord == keyword);
+        }
+    }

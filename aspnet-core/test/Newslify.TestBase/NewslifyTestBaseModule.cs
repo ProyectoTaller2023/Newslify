@@ -18,7 +18,7 @@ namespace Newslify;
 public class NewslifyTestBaseModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
-    {
+    { 
 
     }
 

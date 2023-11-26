@@ -1,8 +1,4 @@
 ﻿using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,7 +10,6 @@ namespace Newslify
 
         public NewsApiService_Test()
         {
-            // instancio la clase concreta ya que quiero probar explicitamente la misma.
             _newsApiService = new HandlerNewsAPI();
         }
 
@@ -22,7 +17,7 @@ namespace Newslify
         public async Task Should_Get_3_News()
         {
             //Arrage            
-            var query = "Bitcoin";
+            var query = "bitcoin";
 
             //Act
             var articles = await _newsApiService.getNews("1", 3, query);

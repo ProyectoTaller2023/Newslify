@@ -9,17 +9,18 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Uow;
 using Xunit;
 
-namespace Newslify.ReadingLists
+namespace Newslify
 {
     public class ReadingListAppService_Test : NewslifyApplicationTestBase
     {
-        private readonly IReadingListsAppService _ReadingListAppService;
+        private readonly IReadingListsAppService _readingListAppService;
         private readonly IDbContextProvider<NewslifyDbContext> _dbContextProvider;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public ReadingListAppService_Test()
         {
-            _ReadingListAppService = GetRequiredService<IReadingListsAppService>();
+            // Esta inyeccion da problemas, no reconoce el servicio como registrado
+            _readingListAppService = GetRequiredService<IReadingListsAppService>();
             _dbContextProvider = GetRequiredService<IDbContextProvider<NewslifyDbContext>>();
             _unitOfWorkManager = GetRequiredService<IUnitOfWorkManager>();
         }
@@ -29,21 +30,21 @@ namespace Newslify.ReadingLists
         {
 
             //Act
-            var ReadingLists = await _ReadingListAppService.GetReadingListsAsync();
+            var readingLists = await _readingListAppService.GetReadingListsAsync();
 
             //Assert
-            ReadingLists.ShouldNotBeNull();
-            ReadingLists.Count.ShouldBeGreaterThan(1);
+            readingLists.ShouldNotBeNull();
+            readingLists.Count.ShouldBeGreaterThan(1);
         }
 
         [Fact]
         public async Task Should_Create_ReadingList()
         {
             //Arrange            
-            var input = new CreateReadingListDto { Name = "nueva reading list" };
+            var input = new CreateReadingListDto { Name = "nueva lista de lectura" };
 
             //Act
-            var newReadingList = await _ReadingListAppService.PostReadingListAsync(input);
+            var newReadingList = await _readingListAppService.PostReadingListAsync(input);
 
             //Assert
             // Se verifican los datos devueltos por el servicio
@@ -54,7 +55,7 @@ namespace Newslify.ReadingLists
             {
                 var dbContext = await _dbContextProvider.GetDbContextAsync();
                 dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id).ShouldNotBeNull();
-                dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id).Name.ShouldBe(input.Name);
+                dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id)?.Name.ShouldBe(input.Name);
             }
         }
 
@@ -62,10 +63,10 @@ namespace Newslify.ReadingLists
         public async Task Should_Update_ReadingList()
         {
             //Arrange            
-            var input = new UpdateReadingListDto { Name = "nueva reading list", Id = 1 };
+            var input = new UpdateReadingListDto { Name = "lista de lectura actualizada", Id = 1 };
 
             //Act
-            var newReadingList = await _ReadingListAppService.PutReadingListAsync(input);
+            var newReadingList = await _readingListAppService.PutReadingListAsync(input);
 
             //Assert
             // Se verifican los datos devueltos por el servicio
@@ -76,10 +77,31 @@ namespace Newslify.ReadingLists
             {
                 var dbContext = await _dbContextProvider.GetDbContextAsync();
                 dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id).ShouldNotBeNull();
-                dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id).Name.ShouldBe(input.Name);
+                dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id)?.Name.ShouldBe(input.Name);
             }
         }
 
-    }
+        [Fact]
+        public async Task Should_Create_Child_ReadingList()
+        {
+            //Arrange            
+            var input = new CreateReadingListDto { Name = "nueva lista de lectura hija", ParentId = 1 };
 
+            //Act
+            var newReadingList = await _readingListAppService.PostReadingListAsync(input);
+
+            //Assert
+            // Se verifican los datos devueltos por el servicio
+            newReadingList.ShouldNotBeNull();
+            newReadingList.Id.ShouldBePositive();
+            // se verifican los datos persistidos por el servicio
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var dbContext = await _dbContextProvider.GetDbContextAsync();
+                dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id).ShouldNotBeNull();
+                dbContext.ReadingLists.FirstOrDefault(t => t.Id == newReadingList.Id)?.Name.ShouldBe(input.Name);
+                dbContext.ReadingLists.FirstOrDefault(t => t.Id == input.ParentId)?.ReadingLists.ShouldContain(t => t.Name == input.Name);
+            }
+        }
+    }
 }

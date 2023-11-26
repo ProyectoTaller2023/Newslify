@@ -26,7 +26,7 @@ public class NewslifyTestDataSeedContributor : IDataSeedContributor, ITransientD
         await _identityUserManager.CreateAsync(identityUser1, "1q2w3E*");
         // await _identityUserManager.AddToRoleAsync(identityUser1, "Admin");
 
-        await _readingListRepository.InsertAsync(new ReadingList { Name = "Primer tema", User = identityUser1 });
-        await _readingListRepository.InsertAsync(new ReadingList { Name = "Segundo tema", User = identityUser1 });
+        await _readingListRepository.InsertAsync(new ReadingList { Name = "Primer reading list", User = identityUser1 });
+        await _readingListRepository.InsertAsync(new ReadingList { Name = "Segunda reading list", User = identityUser1 });
     }
 }

@@ -49,4 +49,5 @@ public class ReadingListManager_Integration_Tests : NewslifyDomainTestBase
         readingList.Name.ShouldBe(name);
         readingList.User.ShouldBe(user);
     }
+
 }

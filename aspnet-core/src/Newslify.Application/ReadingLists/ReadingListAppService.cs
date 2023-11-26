@@ -33,8 +33,6 @@ namespace Newslify.ReadingLists
             _readinglistManager = readinglistManager;
         }
 
-        // hay que editar para que devuelva la lista de lectura de un usuario específico.
-
         public async Task<ICollection<ReadingListDto>> GetReadingListsAsync()
         {
             var readingLists = await _repository.GetListAsync();

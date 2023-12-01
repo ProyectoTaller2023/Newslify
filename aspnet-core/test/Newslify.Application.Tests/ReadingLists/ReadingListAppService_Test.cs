@@ -9,18 +9,18 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Uow;
 using Xunit;
 
-namespace Newslify
+namespace Newslify.ReadingLists
 {
     public class ReadingListAppService_Test : NewslifyApplicationTestBase
     {
-        private readonly IReadingListsAppService _readingListAppService;
+        private readonly IReadingListAppService _readingListAppService;
         private readonly IDbContextProvider<NewslifyDbContext> _dbContextProvider;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public ReadingListAppService_Test()
         {
             // Esta inyeccion da problemas, no reconoce el servicio como registrado
-            _readingListAppService = GetRequiredService<IReadingListsAppService>();
+            _readingListAppService = GetRequiredService<IReadingListAppService>();
             _dbContextProvider = GetRequiredService<IDbContextProvider<NewslifyDbContext>>();
             _unitOfWorkManager = GetRequiredService<IUnitOfWorkManager>();
         }

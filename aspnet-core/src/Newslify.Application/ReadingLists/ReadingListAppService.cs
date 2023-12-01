@@ -19,7 +19,7 @@ using Newslify.SavedNews;
 namespace Newslify.ReadingLists
 {
     [Authorize]
-    public class ReadingListAppService : NewslifyAppService, IReadingListsAppService 
+    public class ReadingListAppService : NewslifyAppService, IReadingListAppService 
     {
         private readonly IRepository<ReadingList, int> _repository;
         private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;

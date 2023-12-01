@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
-using Newslify.ReadingLists;
-
-namespace Newslify
+namespace Newslify.ReadingLists
 {
-	public interface IReadingListsAppService : IApplicationService
+	public interface IReadingListAppService : IApplicationService
 	{
 		Task<ICollection<ReadingListDto>> GetReadingListsAsync();
 		Task<ReadingListDto> PostReadingListAsync(CreateReadingListDto input);

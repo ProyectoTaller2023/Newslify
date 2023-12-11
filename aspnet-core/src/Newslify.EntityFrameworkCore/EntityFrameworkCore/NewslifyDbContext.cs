@@ -16,8 +16,9 @@ using Newslify.Languages;
 using Newslify.ReadingLists;
 using Newslify.Keywords;
 using Newslify.SavedNews;
-using Newslify.LogReadNews;
 using Volo.Abp.EntityFrameworkCore.Modeling;
+using Newslify.Alerts;
+using Newslify.Notifications;
 
 namespace Newslify.EntityFrameworkCore;
 
@@ -65,7 +66,8 @@ public class NewslifyDbContext :
     public DbSet<ReadingList> ReadingLists { get; set; }
     public DbSet<Keyword> Keywords { get; set; }
     public DbSet<SavedNew> SavedNews { get; set; }
-    public DbSet<LogReadNew> LogReadNews { get; set; }
+    public DbSet<Alert> Alerts { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     #endregion
 
@@ -134,13 +136,25 @@ public class NewslifyDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
         });
 
-        /* LogReadNew Entity*/
-        builder.Entity<LogReadNew>(b =>
+        // Alert Entity
+        builder.Entity<Alert>(b =>
         {
-            b.ToTable(NewslifyConsts.DbTablePrefix + "LogReadNews", NewslifyConsts.DbSchema);
+            b.ToTable(NewslifyConsts.DbTablePrefix + "Alerts", NewslifyConsts.DbSchema);
             b.ConfigureByConvention();
-            b.Property(x => x.Url).IsRequired().HasMaxLength(256);
-            b.Property(x => x.DateRead).IsRequired().HasMaxLength(11);
+        });
+
+        // Notification entity
+        builder.Entity<Notification>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "Notifications",
+                NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // evitar problemas con foreign key
+            b.HasOne<Alert>(s => s.Alert)
+                .WithMany(g => g.Notifications)
+                .HasForeignKey(s => s.AlertId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
     }
 }

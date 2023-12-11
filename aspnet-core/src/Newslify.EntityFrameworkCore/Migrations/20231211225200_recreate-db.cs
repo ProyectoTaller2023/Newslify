@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Newslify.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class recreatedb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -357,55 +357,22 @@ namespace Newslify.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppLogReadNews",
+                name: "AppSavedNews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Url = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    DateRead = table.Column<DateTime>(type: "datetime2", maxLength: 11, nullable: false),
-                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppLogReadNews", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AppNews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Author = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Url = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Source = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
+                    UrlToImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppNews", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AppReadingLists",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ParentListId = table.Column<int>(type: "int", nullable: true),
-                    ParentReadingListId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppReadingLists", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AppReadingLists_AppReadingLists_ParentReadingListId",
-                        column: x => x.ParentReadingListId,
-                        principalTable: "AppReadingLists",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_AppSavedNews", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -633,73 +600,25 @@ namespace Newslify.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "KeywordNew",
+                name: "KeywordSavedNew",
                 columns: table => new
                 {
                     KeywordsId = table.Column<int>(type: "int", nullable: false),
-                    NewsId = table.Column<int>(type: "int", nullable: false)
+                    SavedNewsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KeywordNew", x => new { x.KeywordsId, x.NewsId });
+                    table.PrimaryKey("PK_KeywordSavedNew", x => new { x.KeywordsId, x.SavedNewsId });
                     table.ForeignKey(
-                        name: "FK_KeywordNew_AppKeywords_KeywordsId",
+                        name: "FK_KeywordSavedNew_AppKeywords_KeywordsId",
                         column: x => x.KeywordsId,
                         principalTable: "AppKeywords",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_KeywordNew_AppNews_NewsId",
-                        column: x => x.NewsId,
-                        principalTable: "AppNews",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "KeywordReadingList",
-                columns: table => new
-                {
-                    KeywordsId = table.Column<int>(type: "int", nullable: false),
-                    ReadingListsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_KeywordReadingList", x => new { x.KeywordsId, x.ReadingListsId });
-                    table.ForeignKey(
-                        name: "FK_KeywordReadingList_AppKeywords_KeywordsId",
-                        column: x => x.KeywordsId,
-                        principalTable: "AppKeywords",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_KeywordReadingList_AppReadingLists_ReadingListsId",
-                        column: x => x.ReadingListsId,
-                        principalTable: "AppReadingLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NewReadingList",
-                columns: table => new
-                {
-                    NewsId = table.Column<int>(type: "int", nullable: false),
-                    ReadingListsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NewReadingList", x => new { x.NewsId, x.ReadingListsId });
-                    table.ForeignKey(
-                        name: "FK_NewReadingList_AppNews_NewsId",
-                        column: x => x.NewsId,
-                        principalTable: "AppNews",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_NewReadingList_AppReadingLists_ReadingListsId",
-                        column: x => x.ReadingListsId,
-                        principalTable: "AppReadingLists",
+                        name: "FK_KeywordSavedNew_AppSavedNews_SavedNewsId",
+                        column: x => x.SavedNewsId,
+                        principalTable: "AppSavedNews",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -875,6 +794,54 @@ namespace Newslify.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppAlerts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    active = table.Column<bool>(type: "bit", nullable: false),
+                    topic = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppAlerts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppAlerts_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppReadingLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReadingListId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppReadingLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppReadingLists_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppReadingLists_AppReadingLists_ReadingListId",
+                        column: x => x.ReadingListId,
+                        principalTable: "AppReadingLists",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictTokens",
                 columns: table => new
                 {
@@ -913,6 +880,83 @@ namespace Newslify.Migrations
                         column: x => x.AuthorizationId,
                         principalTable: "OpenIddictAuthorizations",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppNotifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AlertId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppNotifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppNotifications_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppNotifications_AppAlerts_AlertId",
+                        column: x => x.AlertId,
+                        principalTable: "AppAlerts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "KeywordReadingList",
+                columns: table => new
+                {
+                    KeywordsId = table.Column<int>(type: "int", nullable: false),
+                    ReadingListsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KeywordReadingList", x => new { x.KeywordsId, x.ReadingListsId });
+                    table.ForeignKey(
+                        name: "FK_KeywordReadingList_AppKeywords_KeywordsId",
+                        column: x => x.KeywordsId,
+                        principalTable: "AppKeywords",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KeywordReadingList_AppReadingLists_ReadingListsId",
+                        column: x => x.ReadingListsId,
+                        principalTable: "AppReadingLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReadingListSavedNew",
+                columns: table => new
+                {
+                    ReadingListsId = table.Column<int>(type: "int", nullable: false),
+                    SavedNewsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReadingListSavedNew", x => new { x.ReadingListsId, x.SavedNewsId });
+                    table.ForeignKey(
+                        name: "FK_ReadingListSavedNew_AppReadingLists_ReadingListsId",
+                        column: x => x.ReadingListsId,
+                        principalTable: "AppReadingLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReadingListSavedNew_AppSavedNews_SavedNewsId",
+                        column: x => x.SavedNewsId,
+                        principalTable: "AppSavedNews",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -1113,14 +1157,29 @@ namespace Newslify.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppReadingLists_ParentReadingListId",
-                table: "AppReadingLists",
-                column: "ParentReadingListId");
+                name: "IX_AppAlerts_UserId",
+                table: "AppAlerts",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KeywordNew_NewsId",
-                table: "KeywordNew",
-                column: "NewsId");
+                name: "IX_AppNotifications_AlertId",
+                table: "AppNotifications",
+                column: "AlertId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppNotifications_UserId",
+                table: "AppNotifications",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppReadingLists_ReadingListId",
+                table: "AppReadingLists",
+                column: "ReadingListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppReadingLists_UserId",
+                table: "AppReadingLists",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_KeywordReadingList_ReadingListsId",
@@ -1128,9 +1187,9 @@ namespace Newslify.Migrations
                 column: "ReadingListsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NewReadingList_ReadingListsId",
-                table: "NewReadingList",
-                column: "ReadingListsId");
+                name: "IX_KeywordSavedNew_SavedNewsId",
+                table: "KeywordSavedNew",
+                column: "SavedNewsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
@@ -1161,6 +1220,11 @@ namespace Newslify.Migrations
                 name: "IX_OpenIddictTokens_ReferenceId",
                 table: "OpenIddictTokens",
                 column: "ReferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReadingListSavedNew_SavedNewsId",
+                table: "ReadingListSavedNew",
+                column: "SavedNewsId");
         }
 
         /// <inheritdoc />
@@ -1233,22 +1297,22 @@ namespace Newslify.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AppLogReadNews");
-
-            migrationBuilder.DropTable(
-                name: "KeywordNew");
+                name: "AppNotifications");
 
             migrationBuilder.DropTable(
                 name: "KeywordReadingList");
 
             migrationBuilder.DropTable(
-                name: "NewReadingList");
+                name: "KeywordSavedNew");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictTokens");
+
+            migrationBuilder.DropTable(
+                name: "ReadingListSavedNew");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
@@ -1263,28 +1327,31 @@ namespace Newslify.Migrations
                 name: "AbpRoles");
 
             migrationBuilder.DropTable(
-                name: "AbpUsers");
+                name: "AppAlerts");
 
             migrationBuilder.DropTable(
                 name: "AppKeywords");
 
             migrationBuilder.DropTable(
-                name: "AppNews");
+                name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
                 name: "AppReadingLists");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictAuthorizations");
+                name: "AppSavedNews");
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
 
             migrationBuilder.DropTable(
-                name: "AppLanguages");
+                name: "OpenIddictApplications");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictApplications");
+                name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "AppLanguages");
         }
     }
 }

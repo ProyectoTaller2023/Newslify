@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Repositories;
 namespace Newslify.Alerts
 {
     [Authorize]
-    public class AlertAppService : NewslifyAppService, IAlertsAppService
+    public class AlertAppService : NewslifyAppService, IAlertAppService
     {
         private readonly IRepository<Alert, int> _repository;
         private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;

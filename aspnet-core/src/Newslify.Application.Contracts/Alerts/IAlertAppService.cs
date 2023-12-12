@@ -6,7 +6,7 @@ using Volo.Abp.Application.Services;
 
 namespace Newslify.Alerts
 {
-    public interface IAlertsAppService : IApplicationService
+    public interface IAlertAppService : IApplicationService
     {
         Task<AlertDto> CreateAsync(string topic);
         //Task<ICollection<NotificationDto>> NotifyNewResultsAsync();

@@ -54,6 +54,34 @@ namespace Newslify.Migrations
                     b.ToTable("KeywordSavedNew");
                 });
 
+            modelBuilder.Entity("Newslify.Alerts.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("topic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppAlerts", (string)null);
+                });
+
             modelBuilder.Entity("Newslify.Keywords.Keyword", b =>
                 {
                     b.Property<int>("Id")
@@ -95,7 +123,7 @@ namespace Newslify.Migrations
                     b.ToTable("AppLanguages", (string)null);
                 });
 
-            modelBuilder.Entity("Newslify.LogReadNews.LogReadNew", b =>
+            modelBuilder.Entity("Newslify.Notifications.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,23 +131,33 @@ namespace Newslify.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateRead")
-                        .HasMaxLength(11)
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("AlertId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AlertId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppLogReadNews", (string)null);
+                    b.ToTable("AppNotifications", (string)null);
                 });
 
             modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
@@ -1900,13 +1938,32 @@ namespace Newslify.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Newslify.LogReadNews.LogReadNew", b =>
+            modelBuilder.Entity("Newslify.Alerts.Alert", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Newslify.Notifications.Notification", b =>
+                {
+                    b.HasOne("Newslify.Alerts.Alert", "Alert")
+                        .WithMany("Notifications")
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Alert");
 
                     b.Navigation("User");
                 });
@@ -2088,6 +2145,11 @@ namespace Newslify.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Newslify.Alerts.Alert", b =>
+                {
+                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("Newslify.Languages.Language", b =>

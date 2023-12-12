@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Newslify.Migrations
 {
     [DbContext(typeof(NewslifyDbContext))]
-    [Migration("20231115222845_agregar-constructor-keyword")]
-    partial class agregarconstructorkeyword
+    [Migration("20231211225200_recreate-db")]
+    partial class recreatedb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,34 @@ namespace Newslify.Migrations
                     b.HasIndex("SavedNewsId");
 
                     b.ToTable("KeywordSavedNew");
+                });
+
+            modelBuilder.Entity("Newslify.Alerts.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("topic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppAlerts", (string)null);
                 });
 
             modelBuilder.Entity("Newslify.Keywords.Keyword", b =>
@@ -98,7 +126,7 @@ namespace Newslify.Migrations
                     b.ToTable("AppLanguages", (string)null);
                 });
 
-            modelBuilder.Entity("Newslify.LogReadNews.LogReadNew", b =>
+            modelBuilder.Entity("Newslify.Notifications.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,23 +134,33 @@ namespace Newslify.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateRead")
-                        .HasMaxLength(11)
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("AlertId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AlertId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppLogReadNews", (string)null);
+                    b.ToTable("AppNotifications", (string)null);
                 });
 
             modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
@@ -138,10 +176,7 @@ namespace Newslify.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<int?>("ParentListId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentReadingListId")
+                    b.Property<int?>("ReadingListId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
@@ -149,7 +184,7 @@ namespace Newslify.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentReadingListId");
+                    b.HasIndex("ReadingListId");
 
                     b.HasIndex("UserId");
 
@@ -169,15 +204,17 @@ namespace Newslify.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -188,6 +225,10 @@ namespace Newslify.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("UrlToImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1900,7 +1941,7 @@ namespace Newslify.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Newslify.LogReadNews.LogReadNew", b =>
+            modelBuilder.Entity("Newslify.Alerts.Alert", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
                         .WithMany()
@@ -1911,11 +1952,13 @@ namespace Newslify.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
+            modelBuilder.Entity("Newslify.Notifications.Notification", b =>
                 {
-                    b.HasOne("Newslify.ReadingLists.ReadingList", "ParentReadingList")
-                        .WithMany()
-                        .HasForeignKey("ParentReadingListId");
+                    b.HasOne("Newslify.Alerts.Alert", "Alert")
+                        .WithMany("Notifications")
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
                         .WithMany()
@@ -1923,7 +1966,22 @@ namespace Newslify.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ParentReadingList");
+                    b.Navigation("Alert");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
+                {
+                    b.HasOne("Newslify.ReadingLists.ReadingList", null)
+                        .WithMany("ReadingLists")
+                        .HasForeignKey("ReadingListId");
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -2092,9 +2150,19 @@ namespace Newslify.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Newslify.Alerts.Alert", b =>
+                {
+                    b.Navigation("Notifications");
+                });
+
             modelBuilder.Entity("Newslify.Languages.Language", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Newslify.ReadingLists.ReadingList", b =>
+                {
+                    b.Navigation("ReadingLists");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

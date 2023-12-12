@@ -6,7 +6,7 @@ using Volo.Abp.Application.Services;
 
 namespace Newslify.Notifications
 {
-    public interface INotificationsAppService : IApplicationService
+    public interface INotificationAppService : IApplicationService
     {
         Task<ICollection<NotificationDto>> getNotificationsAsync();
 

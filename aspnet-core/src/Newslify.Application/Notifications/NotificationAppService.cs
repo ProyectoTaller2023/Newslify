@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Newslify.Notifications
 {
     [Authorize]
-    public class NotificationAppService : NewslifyAppService, INotificationsAppService
+    public class NotificationAppService : NewslifyAppService, INotificationAppService
     {
         private readonly IRepository<Notification, int> _repository;
         private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;

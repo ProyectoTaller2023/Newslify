@@ -47,7 +47,7 @@ namespace Newslify.Notifications
             }
             var newNotification = new Notification { Title = title, Description = description, User = identityUser, AlertId = alertId, Active=true };
 
-            var notification = await _repository.InsertAsync(newNotification, autoSave: true);
+            var notification = await _repository.InsertAsync(newNotification);
 
             return ObjectMapper.Map<Notification, NotificationDto>(notification);
         }

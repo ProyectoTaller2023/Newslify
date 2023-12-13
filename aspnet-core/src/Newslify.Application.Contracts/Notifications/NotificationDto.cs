@@ -12,7 +12,5 @@ namespace Newslify.Notifications
         public string Description { get; set; }
         public DateTime DateTime { get; set; }
         public UserDto User { get; set; }
-        public AlertDto Alert { get; set; }
-        public int AlertId { get; set; }
     }
 }

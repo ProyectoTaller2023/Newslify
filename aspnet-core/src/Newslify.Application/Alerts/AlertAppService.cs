@@ -8,7 +8,6 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Newslify.Alerts
 {
-    [Authorize]
     public class AlertAppService : NewslifyAppService, IAlertAppService
     {
         private readonly IRepository<Alert, int> _repository;
@@ -24,6 +23,7 @@ namespace Newslify.Alerts
             _newsAppService = newsAppService;
         }
 
+        [Authorize]
         public async Task<AlertDto> CreateAsync (string topic)
         {
             var userGuid = CurrentUser.Id.GetValueOrDefault();
@@ -47,16 +47,8 @@ namespace Newslify.Alerts
         // para evitar notificar dos veces sobre la misma alerta.
         // El background worker se ejecutara cada 24hs por ejemplo aunque para testear deberia ser menos.
         {
-            var userGuid = CurrentUser.Id.GetValueOrDefault();
-            var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());
-
-            if (identityUser == null)
-            {
-                throw new InvalidOperationException("El usuario no fue encontrado.");
-            }
-
             List<NotificationDto> notifications = new List<NotificationDto>();
-            var alerts = await _repository.GetListAsync(a => a.User.Id == identityUser.Id && a.active);
+            var alerts = await _repository.GetListAsync(a => a.active);
 
             foreach (var alert in alerts)
             {

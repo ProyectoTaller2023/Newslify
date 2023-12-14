@@ -1,19 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
-using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Newslify.Keywords;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Newslify.Permissions;
-using Volo.Abp.Identity;
-using Volo.Abp.Users;
-using System.Security.Principal;
-using Newslify;
 using Newslify.SavedNews;
 
 namespace Newslify.ReadingLists
@@ -101,12 +92,4 @@ namespace Newslify.ReadingLists
             return "Se ha eliminado correctamente";
         }
     }
-
-
-    /* public async Task<ThemeDto> GetThemesAsync(int id)
-     {
-         var theme = await _repository.GetAsync(id);
-
-         return ObjectMapper.Map<Theme, ThemeDto>(theme);
-     }*/
 }

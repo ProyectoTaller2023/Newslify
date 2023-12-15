@@ -10,8 +10,7 @@ namespace Newslify.Notifications
     {
         Task<ICollection<NotificationDto>> getNotificationsAsync();
 
-        // TODO: Se crea este metodo para testing, luego esto se eliminara ya que las notificaciones
-        // se deberan crear cuando el worker que revisa las alertas encuentra nuevas noticias.
+        // TODO: Este metodo tendria que ser un servicio de dominio y no de aplicacion.
         Task<NotificationDto> createNotificationAsync(int alertId, string title, string description);
     }
 }

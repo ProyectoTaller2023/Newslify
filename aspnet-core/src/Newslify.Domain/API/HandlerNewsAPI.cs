@@ -14,7 +14,7 @@ namespace Newslify
 {
 public class HandlerNewsAPI : INewsAPI
 {
-    public async Task<ICollection<ArticleDto>> getNews(string LanguageIntCode, int? amountNews, string? query)
+    public async Task<ICollection<ArticleDto>> getNews(string LanguageIntCode, int? amountNews, string? query, DateTime? dateFrom)
     {
 
        NewsApiClient newsApiClient = new NewsApiClient("10a2a9fc820944829819bd5ab8d705e0"); // deberia estar en una variable de entorno
@@ -26,7 +26,7 @@ public class HandlerNewsAPI : INewsAPI
             Q = query ?? "news", // Si no te pasan nada, aplica "news", un filtro poco especifico para que devuelva noticias en general 
             SortBy = SortBys.Popularity,
             Language = GetLanguage(LanguageIntCode),
-            From = GetDateMonthAgoFromNow(),
+            From = GetDateToSearchFrom(dateFrom),
             Page = 1,
             PageSize = amountNews ?? 20
         }) ;
@@ -50,16 +50,22 @@ public class HandlerNewsAPI : INewsAPI
         throw new Exception("La solicitud de la API no fue exitosa. Status: " + articlesResponse.Status);
     }
 
-    // un metodo que devuelva una fecha  de 1 mes hcia atras desde el dia actual
-    private DateTime GetDateMonthAgoFromNow()
-    {
-        DateTime date = DateTime.Now;
-        date = date.AddMonths(-1);
-        return date;
-    }
+        private DateTime GetDateToSearchFrom(DateTime? date)
+        {
+            DateTime dateMonthAgo = DateTime.Now.AddMonths(-1);
 
-    // Analiza los case segun los valores del data seeder de la db. LanguageIntCode seria el languageId del usuario.
-    private NewsAPI.Constants.Languages GetLanguage(string LanguageIntCode)
+            if (date == null || date < dateMonthAgo)
+            {
+                return dateMonthAgo;
+            }
+
+            DateTime yesterday = DateTime.Now.AddDays(-1);
+
+            return (date <= yesterday) ? date.Value : yesterday;
+        }
+
+        // Analiza los case segun los valores del data seeder de la db. LanguageIntCode seria el languageId del usuario.
+        private NewsAPI.Constants.Languages GetLanguage(string LanguageIntCode)
     {
         switch (LanguageIntCode)
         {

@@ -2,25 +2,26 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Newslify.Alerts;
 
 namespace Newslify.Notifications
 {
-    [Authorize]
     public class NotificationAppService : NewslifyAppService, INotificationAppService
     {
         private readonly IRepository<Notification, int> _repository;
         private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;
+        private readonly AlertManager _alertManager;
 
-        public NotificationAppService(IRepository<Notification, int> repository, UserManager<Volo.Abp.Identity.IdentityUser> userManager)
+        public NotificationAppService(IRepository<Notification, int> repository, UserManager<Volo.Abp.Identity.IdentityUser> userManager, AlertManager alertManager)
         {
             _repository = repository;
             _userManager = userManager;
+            _alertManager = alertManager;
         }
 
+        [Authorize]
         public async Task<ICollection<NotificationDto>> getNotificationsAsync()
         {
             var userGuid = CurrentUser.Id.GetValueOrDefault();
@@ -36,18 +37,20 @@ namespace Newslify.Notifications
             return ObjectMapper.Map<ICollection<Notification>, ICollection<NotificationDto>>(notifications);
         }
 
-        // TODO: para testear se crea metodo para publicar notificaciones (borrar luego, no deberia ser parte del servicio que se expone)
         public async Task<NotificationDto> createNotificationAsync(int alertId, string title, string description)
         {
-            var userGuid = CurrentUser.Id.GetValueOrDefault();
-            var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());
-            if (identityUser == null)
+            var alert = await _alertManager.GetAlertAsync(alertId);
+            Guid userId = alert.User.Id;
+            Volo.Abp.Identity.IdentityUser? user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
             {
                 throw new InvalidOperationException("El usuario no fue encontrado.");
             }
-            var newNotification = new Notification { Title = title, Description = description, User = identityUser, AlertId = alertId, Active=true };
 
-            var notification = await _repository.InsertAsync(newNotification, autoSave: true);
+            var newNotification = new Notification { Title = title, Description = description, User = user, AlertId = alertId, Active=true };
+
+            var notification = await _repository.InsertAsync(newNotification);
 
             return ObjectMapper.Map<Notification, NotificationDto>(notification);
         }

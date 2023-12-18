@@ -22,7 +22,7 @@ namespace Newslify.Notifications
         }
 
         [Authorize]
-        public async Task<ICollection<NotificationDto>> getNotificationsAsync()
+        public async Task<ICollection<NotificationDto>> getUserNotificationsAsync()
         {
             var userGuid = CurrentUser.Id.GetValueOrDefault();
             var identityUser = await _userManager.FindByIdAsync(userGuid.ToString());

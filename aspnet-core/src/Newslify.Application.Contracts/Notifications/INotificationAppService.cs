@@ -8,9 +8,8 @@ namespace Newslify.Notifications
 {
     public interface INotificationAppService : IApplicationService
     {
-        Task<ICollection<NotificationDto>> getNotificationsAsync();
+        Task<ICollection<NotificationDto>> getUserNotificationsAsync();
 
-        // TODO: Este metodo tendria que ser un servicio de dominio y no de aplicacion.
         Task<NotificationDto> createNotificationAsync(int alertId, string title, string description);
     }
 }

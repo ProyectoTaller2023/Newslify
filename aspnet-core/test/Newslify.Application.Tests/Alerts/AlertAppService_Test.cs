@@ -1,4 +1,5 @@
 ﻿using Newslify.EntityFrameworkCore;
+using Newslify.Notifications;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,32 @@ namespace Newslify.Alerts
                 dbContext.Alerts.FirstOrDefault(a => a.Id == newAlert.Id).ShouldNotBeNull();
                 dbContext.Alerts.FirstOrDefault(a => a.Id == newAlert.Id)?.topic.ShouldBe(newAlert.topic);
             }
+        }
+
+        [Fact]
+        public async Task Should_Notify_Active_Alerts()
+        {
+            //Arrange
+            string pattern = "bitcoin";
+
+            //Act
+            ICollection<NotificationDto> notifications = await _alertAppService.NotifyNewResultsAsync();
+            var notifToTest = notifications
+            .Where(n => n.Title != null && n.Title.Contains(pattern, StringComparison.OrdinalIgnoreCase))
+            .FirstOrDefault();
+
+            //Assert
+            notifications.Count().ShouldBeGreaterThan(0);
+            notifications.ShouldContain(notification => notification.Title.Contains(pattern));
+            notifications.ShouldContain(n => n.Title == notifToTest.Title);
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var dbContext = await _dbContextProvider.GetDbContextAsync();
+                var notif = dbContext.Notifications.FirstOrDefault(n => n.Title == notifToTest.Title).ShouldNotBeNull();
+                dbContext.Alerts.FirstOrDefault(a => a.Id == notif.AlertId)?.active.ShouldBeFalse();
+            }
+
         }
     }
 }

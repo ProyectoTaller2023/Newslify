@@ -24,7 +24,7 @@ namespace Newslify
             var query = "bitcoin";
 
             //Act
-            var news = await _newsAppService.GetNewsAsync("1",3,query);
+            var news = await _newsAppService.GetNewsAsync("1",3,query, null);
 
             //Assert
             news.ShouldNotBeNull();

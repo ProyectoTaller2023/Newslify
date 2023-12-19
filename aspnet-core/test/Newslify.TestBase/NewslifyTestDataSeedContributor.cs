@@ -40,5 +40,7 @@ public class NewslifyTestDataSeedContributor : IDataSeedContributor, ITransientD
         await _notificationRepository.InsertAsync(new Notification { Title = "Nuevas noticias de test", Description = "Hey, tienes nuevas noticias sobre test, no te las pierdas!", Alert=alert, AlertId=alert.Id, User = identityUser1, Active=true });
         var alert2 = await _alertRepository.InsertAsync(new Alert { topic = "test 2", User = identityUser2 });
         await _notificationRepository.InsertAsync(new Notification { Title = "wrong", Description = "Alerta para testear notificationService!", Alert = alert2, AlertId = alert2.Id, User = identityUser2, Active = true });
+
+        var alert3 = await _alertRepository.InsertAsync(new Alert { topic = "bitcoin", User = identityUser1, active=true });
     }
 }

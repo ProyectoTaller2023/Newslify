@@ -20,7 +20,7 @@ namespace Newslify
             var query = "bitcoin";
 
             //Act
-            var articles = await _newsApiService.getNews("1", 3, query);
+            var articles = await _newsApiService.getNews("1", 3, query, null);
 
             //Assert
             articles.ShouldNotBeNull();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Newslify.Migrations
 {
     /// <inheritdoc />
-    public partial class recreatedb : Migration
+    public partial class CreateAPILogs : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -794,6 +794,29 @@ namespace Newslify.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "APILogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Search = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ErrorCode = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_APILogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_APILogs_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppAlerts",
                 columns: table => new
                 {
@@ -1157,6 +1180,11 @@ namespace Newslify.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_APILogs_UserId",
+                table: "APILogs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AppAlerts_UserId",
                 table: "AppAlerts",
                 column: "UserId");
@@ -1295,6 +1323,9 @@ namespace Newslify.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "APILogs");
 
             migrationBuilder.DropTable(
                 name: "AppNotifications");

@@ -19,6 +19,7 @@ using Newslify.SavedNews;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Newslify.Alerts;
 using Newslify.Notifications;
+using Newslify.APILogs;
 
 namespace Newslify.EntityFrameworkCore;
 
@@ -68,6 +69,7 @@ public class NewslifyDbContext :
     public DbSet<SavedNew> SavedNews { get; set; }
     public DbSet<Alert> Alerts { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<APILog> APILogs { get; set; }
 
     #endregion
 

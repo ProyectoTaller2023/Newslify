@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Newslify.Migrations
 {
     [DbContext(typeof(NewslifyDbContext))]
-    [Migration("20231211225200_recreate-db")]
-    partial class recreatedb
+    [Migration("20231220145450_CreateAPILogs")]
+    partial class CreateAPILogs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,37 @@ namespace Newslify.Migrations
                     b.HasIndex("SavedNewsId");
 
                     b.ToTable("KeywordSavedNew");
+                });
+
+            modelBuilder.Entity("Newslify.APILogs.APILog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ErrorCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Search")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("APILogs");
                 });
 
             modelBuilder.Entity("Newslify.Alerts.Alert", b =>
@@ -1939,6 +1970,17 @@ namespace Newslify.Migrations
                         .HasForeignKey("SavedNewsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Newslify.APILogs.APILog", b =>
+                {
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Newslify.Alerts.Alert", b =>

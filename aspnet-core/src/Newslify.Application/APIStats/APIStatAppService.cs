@@ -35,26 +35,25 @@ namespace Newslify.APILogs
             return averageInSecs;
         }
 
-        private (string, int) GetMaxFromDic(Dictionary<string, int> dic)
+        private TrendingTopicResponse GetMaxFromDic(Dictionary<string, int> dic)
         {
-            var max = int.MinValue; // Inicializar con el valor mínimo posible para int
-            var maxValue = "";
-
+            var tuplaResponse = new TrendingTopicResponse{max=int.MinValue, maxValue=""}; 
+            
             foreach (var item in dic)
             {
-                if (item.Value > max)
+                if (item.Value > tuplaResponse.max)
                 {
-                    max = item.Value;
-                    maxValue = item.Key;
+                    tuplaResponse.max = item.Value;
+                    tuplaResponse.maxValue = item.Key;
                 }
             }
 
-            return (maxValue, max);
+            return tuplaResponse;
         }
 
 
 
-        public async Task<(string,int)> GetTrendingTopic ()
+        public async Task<TrendingTopicResponse> GetTrendingTopic()
         {
             var logs = await _APILogRepository.GetListAsync();
             var topicCount = new Dictionary<string, int> ();
@@ -70,7 +69,8 @@ namespace Newslify.APILogs
                     topicCount[log.Search.ToLower()] = 1;
                 }
             }
-            return GetMaxFromDic(topicCount);           
+            var result = GetMaxFromDic(topicCount);
+            return result;           
         }
     }
 }

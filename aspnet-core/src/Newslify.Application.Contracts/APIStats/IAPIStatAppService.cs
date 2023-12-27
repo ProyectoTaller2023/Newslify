@@ -8,6 +8,7 @@ namespace Newslify.APILogs
         Task<int> GetLogsAmount();
         Task<double> GetAverageAPIAccess();
         Task<TrendingTopicResponse> GetTrendingTopic();
+        Task<double> GetPercentageSuccessRequests();
     }
 }
 

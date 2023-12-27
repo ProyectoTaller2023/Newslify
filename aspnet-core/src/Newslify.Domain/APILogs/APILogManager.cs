@@ -14,9 +14,9 @@ namespace Newslify.APILogs
             _repository = repository;
         }
 
-        public async Task<APILog> Create(string search, DateTime StartRequestTime, DateTime EndRequestTime, Volo.Abp.Identity.IdentityUser User)
+        public async Task<APILog> Create(string search, DateTime StartRequestTime, DateTime EndRequestTime, Volo.Abp.Identity.IdentityUser User, int errorCode)
         {
-            var APILog = new APILog { Search = search, StartTime = StartRequestTime, EndTime = EndRequestTime , User = User};
+            var APILog = new APILog { Search = search, StartTime = StartRequestTime, EndTime = EndRequestTime, User = User, ErrorCode = errorCode};
             await _repository.InsertAsync(APILog);
             return APILog;  
         }

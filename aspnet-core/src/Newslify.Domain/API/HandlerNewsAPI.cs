@@ -30,6 +30,7 @@ public class HandlerNewsAPI : INewsAPI
             Page = 1,
             PageSize = amountNews ?? 20
         }) ;
+
      
         if (articlesResponse.Status == Statuses.Ok)
         {

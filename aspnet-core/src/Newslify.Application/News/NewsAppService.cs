@@ -25,7 +25,6 @@ namespace Newslify
 
         public async Task<ICollection<NewsDto>> GetNewsAsync(string LanguageIntCode, int? amountNews, string? query, DateTime? dateFrom)
         {
-            // Aca estaria el monitoreo de tiempo de respuesta de la API para independizar
             //TODO: Control de acceso tiempo a la API
             var userGuid = CurrentUser.Id.GetValueOrDefault();
             var User = await _userManager.FindByIdAsync(userGuid.ToString());

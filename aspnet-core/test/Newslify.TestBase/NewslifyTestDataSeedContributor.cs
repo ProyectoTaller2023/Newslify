@@ -32,10 +32,9 @@ public class NewslifyTestDataSeedContributor : IDataSeedContributor, ITransientD
     {
         // Add users        
         IdentityUser identityUser1 = new IdentityUser(Guid.Parse("2e701e62-0953-4dd3-910b-dc6cc93ccb0d"), "admin", "admin@abp.io");
-        IdentityUser identityUser2 = new IdentityUser(Guid.Parse("2e701e62-0953-4dd3-910b-dc6cc93ccb7d"), "admin2", "admin2@abp.io");
+        IdentityUser identityUser2 = new IdentityUser(Guid.Parse("2e701e62-0903-4dd3-950b-dc6cc92ccb7d"), "admin2", "admin2@abp.io");
         await _identityUserManager.CreateAsync(identityUser1, "1q2w3E*");
         await _identityUserManager.CreateAsync(identityUser2, "1q2w3F*");
-        // await _identityUserManager.AddToRoleAsync(identityUser1, "Admin");
 
         await _readingListRepository.InsertAsync(new ReadingList { Name = "Primer reading list", User = identityUser1 });
         await _readingListRepository.InsertAsync(new ReadingList { Name = "Segunda reading list", User = identityUser1 });

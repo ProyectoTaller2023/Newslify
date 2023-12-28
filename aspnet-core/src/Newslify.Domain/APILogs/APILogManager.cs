@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 
-
 namespace Newslify.APILogs
 {
     public class APILogManager : DomainService

@@ -13,8 +13,6 @@ namespace Newslify.APILogs
 
         // relaciones
         public IdentityUser User { get; set; }
-        // public ICollection<Article> Articles { get; set; }
-
 
         public APILog()
         {

@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
@@ -51,8 +49,6 @@ namespace Newslify.APILogs
             return tuplaResponse;
         }
 
-
-
         public async Task<TrendingTopicResponse> GetTrendingTopic()
         {
             var logs = await _APILogRepository.GetListAsync();
@@ -71,6 +67,23 @@ namespace Newslify.APILogs
             }
             var result = GetMaxFromDic(topicCount);
             return result;           
+        }
+
+        public async Task<double> GetPercentageSuccessRequests()
+        {
+            var logs = await _APILogRepository.GetListAsync();
+            int amountErrors = 0;
+
+            foreach (var log in logs)
+            {
+                if (log.ErrorCode == 1) {
+                    amountErrors++;
+                }
+            }
+
+            double percentage = (1 - ((double)amountErrors / logs.Count)) * 100;
+
+            return percentage;
         }
     }
 }

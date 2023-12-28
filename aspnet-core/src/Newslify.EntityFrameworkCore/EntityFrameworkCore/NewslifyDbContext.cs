@@ -158,5 +158,12 @@ public class NewslifyDbContext :
                 .HasForeignKey(s => s.AlertId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
+
+        // APILog Entity
+        builder.Entity<APILog>(b =>
+        {
+            b.ToTable(NewslifyConsts.DbTablePrefix + "APILogs", NewslifyConsts.DbSchema);
+            b.ConfigureByConvention();
+        });
     }
 }

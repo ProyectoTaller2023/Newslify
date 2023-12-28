@@ -24,13 +24,6 @@ namespace Newslify.Languages
 
             return ObjectMapper.Map<ICollection<Language>, ICollection<LanguageDto>>(languages);
         }
-
-       /* public async Task<ThemeDto> GetThemesAsync(int id)
-        {
-            var theme = await _repository.GetAsync(id);
-
-            return ObjectMapper.Map<Theme, ThemeDto>(theme);
-        }*/
     }
 }
 

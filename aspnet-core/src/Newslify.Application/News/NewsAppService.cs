@@ -25,7 +25,6 @@ namespace Newslify
 
         public async Task<ICollection<NewsDto>> GetNewsAsync(string LanguageIntCode, int? amountNews, string? query, DateTime? dateFrom)
         {
-            // Aca estaria el monitoreo de tiempo de respuesta de la API para independizar
             //TODO: Control de acceso tiempo a la API
             var userGuid = CurrentUser.Id.GetValueOrDefault();
             var User = await _userManager.FindByIdAsync(userGuid.ToString());
@@ -34,11 +33,15 @@ namespace Newslify
             {
                 ICollection<ArticleDto> articles = await _newsService.getNews(LanguageIntCode.ToUpper(), amountNews, query, dateFrom);// metodo que se conecte a la API y traiga las noticias
                 DateTime endRequest = DateTime.Now;
-                await _APILogsManager.Create(query, startRequest, endRequest, User);
+                int errorCode = 0;
+                await _APILogsManager.Create(query, startRequest, endRequest, User, errorCode);
                 return ObjectMapper.Map<ICollection<ArticleDto>, ICollection<NewsDto>>(articles);
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
+                DateTime endRequest = DateTime.Now;
+                int errorCode = 1;
+                await _APILogsManager.Create(query, startRequest, endRequest, User, errorCode);
                 return new List<NewsDto>();
             }
          }

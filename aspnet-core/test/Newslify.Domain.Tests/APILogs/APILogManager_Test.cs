@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Volo.Abp.Users;
 using Xunit;
 using Shouldly;
-using Volo.Abp.Security.Claims;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
 
 namespace Newslify.APILogs

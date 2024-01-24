@@ -1,5 +1,4 @@
-﻿using System;
-using Newslify.Languages;
+﻿using Newslify.Languages;
 
 public class User
 {

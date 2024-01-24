@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
-using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
 namespace Newslify.SavedNews
@@ -24,12 +19,5 @@ namespace Newslify.SavedNews
 
             return ObjectMapper.Map<ICollection<SavedNew>, ICollection<SavedNewDto>>(savedNews);
         }
-
-        /* public async Task<ThemeDto> GetThemesAsync(int id)
-         {
-             var theme = await _repository.GetAsync(id);
-
-             return ObjectMapper.Map<Theme, ThemeDto>(theme);
-         }*/
     }
 }

@@ -23,7 +23,7 @@ namespace Newslify.ReadingLists
         public string Name { get; set; }
 
         // Relations
-        //public Guid UserId { get; set; }
+        public Guid UserId { get; set; }
         public IdentityUser User { get; set; }
 
         public ICollection<Keyword> Keywords { get; set; }

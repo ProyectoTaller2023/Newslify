@@ -17,15 +17,16 @@ public class NewslifyTestDataSeedContributor : IDataSeedContributor, ITransientD
     private readonly IRepository<Notification, int> _notificationRepository;
     private readonly IdentityUserManager _identityUserManager;
     private readonly IRepository<APILog, int> _APILogRepository;
+    private readonly IIdentityUserRepository _identityUserRepository;
 
-
-    public NewslifyTestDataSeedContributor(IRepository<ReadingList, int> readingListRepository, IdentityUserManager identityUserManager, IRepository<Alert,int> alertRepository, IRepository<Notification, int> notificationRepository, IRepository<APILog, int> APILogRepository)
+    public NewslifyTestDataSeedContributor(IRepository<ReadingList, int> readingListRepository, IdentityUserManager identityUserManager, IRepository<Alert, int> alertRepository, IRepository<Notification, int> notificationRepository, IRepository<APILog, int> APILogRepository, IIdentityUserRepository identityUserRepository)
     {
         _readingListRepository = readingListRepository;
         _identityUserManager = identityUserManager;
         _alertRepository = alertRepository;
         _notificationRepository = notificationRepository;
         _APILogRepository = APILogRepository;
+        _identityUserRepository = identityUserRepository;
     }
 
     public async Task SeedAsync(DataSeedContext context)
@@ -36,18 +37,18 @@ public class NewslifyTestDataSeedContributor : IDataSeedContributor, ITransientD
         await _identityUserManager.CreateAsync(identityUser1, "1q2w3E*");
         await _identityUserManager.CreateAsync(identityUser2, "1q2w3F*");
 
-        await _readingListRepository.InsertAsync(new ReadingList { Name = "Primer reading list", User = identityUser1 });
-        await _readingListRepository.InsertAsync(new ReadingList { Name = "Segunda reading list", User = identityUser1 });
-        var alert = await _alertRepository.InsertAsync(new Alert { topic = "test", User = identityUser1 }); 
-        await _notificationRepository.InsertAsync(new Notification { Title = "Nuevas noticias de test", Description = "Hey, tienes nuevas noticias sobre test, no te las pierdas!", Alert=alert, AlertId=alert.Id, User = identityUser1, Active=true });
+        await _readingListRepository.InsertAsync(new ReadingList { Name = "Primer reading list", UserId = identityUser1.Id });
+        await _readingListRepository.InsertAsync(new ReadingList { Name = "Segunda reading list", UserId = identityUser1.Id });
+        var alert = await _alertRepository.InsertAsync(new Alert { topic = "test", User = identityUser1 });
+        await _notificationRepository.InsertAsync(new Notification { Title = "Nuevas noticias de test", Description = "Hey, tienes nuevas noticias sobre test, no te las pierdas!", Alert = alert, AlertId = alert.Id, User = identityUser1, Active = true });
         var alert2 = await _alertRepository.InsertAsync(new Alert { topic = "test 2", User = identityUser2 });
         await _notificationRepository.InsertAsync(new Notification { Title = "wrong", Description = "Alerta para testear notificationService!", Alert = alert2, AlertId = alert2.Id, User = identityUser2, Active = true });
 
-        var alert3 = await _alertRepository.InsertAsync(new Alert { topic = "bitcoin", User = identityUser1, active=true });
+        var alert3 = await _alertRepository.InsertAsync(new Alert { topic = "bitcoin", User = identityUser1, active = true });
 
-        await _APILogRepository.InsertAsync(new APILog { Search = "test", StartTime = DateTime.Now, EndTime = DateTime.Now.AddMilliseconds(1000), User = identityUser1, ErrorCode = 0 });
-        await _APILogRepository.InsertAsync(new APILog { Search = "test", StartTime = DateTime.Now, EndTime = DateTime.Now.AddMilliseconds(1000), User = identityUser1, ErrorCode = 0 });
-        await _APILogRepository.InsertAsync(new APILog { Search = "other", StartTime = DateTime.Now, EndTime = DateTime.Now.AddMilliseconds(1000), User = identityUser1, ErrorCode = 1 });
+        await _APILogRepository.InsertAsync(new APILog { Search = "test", StartTime = DateTime.Now, EndTime = DateTime.Now.AddMilliseconds(1000), UserId = identityUser1.Id, ErrorCode = 0 });
+        await _APILogRepository.InsertAsync(new APILog { Search = "test", StartTime = DateTime.Now, EndTime = DateTime.Now.AddMilliseconds(1000), UserId = identityUser1.Id, ErrorCode = 0 });
+        await _APILogRepository.InsertAsync(new APILog { Search = "other", StartTime = DateTime.Now, EndTime = DateTime.Now.AddMilliseconds(1000), UserId = identityUser1.Id, ErrorCode = 1 });
 
     }
 }

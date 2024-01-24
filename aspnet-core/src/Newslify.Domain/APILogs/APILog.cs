@@ -12,11 +12,12 @@ namespace Newslify.APILogs
         public int ErrorCode { get; set; }
 
         // relaciones
-        public IdentityUser User { get; set; }
+        //public IdentityUser User { get; set; }
+        public Guid UserId { get; set; }
 
         public APILog()
         {
-           this.StartTime= DateTime.Now;
+            this.StartTime = DateTime.Now;
         }
     }
 

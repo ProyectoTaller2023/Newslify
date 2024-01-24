@@ -41,7 +41,7 @@ namespace Newslify.APILogs
             //Assert
             APILog.ShouldNotBeNull();
             APILog.Search.ShouldBe(search);
-            APILog.User.ShouldBe(user);
+            APILog.UserId.ShouldBe(user.Id);
         }
     }
 }

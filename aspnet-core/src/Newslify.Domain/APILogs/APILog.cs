@@ -12,7 +12,6 @@ namespace Newslify.APILogs
         public int ErrorCode { get; set; }
 
         // relaciones
-        //public IdentityUser User { get; set; }
         public Guid UserId { get; set; }
 
         public APILog()

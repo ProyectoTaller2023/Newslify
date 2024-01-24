@@ -11,7 +11,6 @@ namespace Newslify.APILogs
     public class APILogManager_Test: NewslifyDomainTestBase
     {
         private readonly APILogManager _APILogManager;
-       // private readonly UserManager<Volo.Abp.Identity.IdentityUser> _userManager;
         private readonly ICurrentUser _currentUser;
         private readonly IdentityUserManager _identityUserManager;
 
@@ -29,7 +28,7 @@ namespace Newslify.APILogs
             var search = "bitcoin";
             var StartRequestTime = DateTime.Now;
             var EndRequestTime = DateTime.Now.AddMilliseconds(700);
-            Volo.Abp.Identity.IdentityUser user = await _identityUserManager.GetByIdAsync(_currentUser.Id.GetValueOrDefault());
+            IdentityUser user = await _identityUserManager.GetByIdAsync(_currentUser.Id.GetValueOrDefault());
             var errorCode = 0;
 
             // Act

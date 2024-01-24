@@ -1,13 +1,6 @@
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
-using Volo.Abp.Identity;
-using Volo.Abp.Users;
 using Newslify.SavedNews;
 using Newslify.Keywords;
 

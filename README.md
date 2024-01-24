@@ -12,7 +12,7 @@
 - [X]  Obtención información estadística de monitoreo de los accesos a la API. 
 
 # Test
-- [ ]  Todos los métodos deberán tener pruebas unitarias y/o de integración.   
+- [X]  Todos los métodos deberán tener pruebas unitarias y/o de integración.   
 
 Las funcionalidades a nivel frontend no serán obligatorias pero serán bienvenidas y reconocidas.
 
